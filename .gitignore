@@ -47,6 +47,3 @@ nunit-*.xml
 # Rider
 .idea/
 *.DotSettings.user
-
-# Project
-build/

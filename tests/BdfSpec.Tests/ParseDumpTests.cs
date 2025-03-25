@@ -7,7 +7,7 @@ public class ParseDumpTests
     [Fact]
     public void TestDemo()
     {
-        var data = File.ReadAllText(Path.Combine(PathDefine.AssetsDir, "demo.bdf"));
+        var data = File.ReadAllText(Path.Combine("assets", "demo.bdf"));
         var font = BdfFont.Parse(data);
         Assert.Equal(data.Replace("\r", ""), font.DumpToString());
 
@@ -78,7 +78,7 @@ public class ParseDumpTests
     [Fact]
     public async Task TestDemoAsync()
     {
-        var data = await File.ReadAllTextAsync(Path.Combine(PathDefine.AssetsDir, "demo.bdf"));
+        var data = await File.ReadAllTextAsync(Path.Combine("assets", "demo.bdf"));
         var font = await BdfFont.ParseAsync(data);
         Assert.Equal(data.Replace("\r", ""), await font.DumpToStringAsync());
 

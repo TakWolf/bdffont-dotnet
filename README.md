@@ -18,9 +18,7 @@ dotnet add package BdfFont
 ```csharp
 using BdfSpec;
 
-var projectRootDir = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", ".."));
-var outputsDir = Path.Combine(projectRootDir, "build", "create");
-
+var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))
 {
     Directory.Delete(outputsDir, true);
@@ -90,17 +88,14 @@ font.Save(Path.Combine(outputsDir, "my-font.bdf"));
 ```csharp
 using BdfSpec;
 
-var projectRootDir = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", ".."));
-var assetsDir = Path.Combine(projectRootDir, "assets");
-var outputsDir = Path.Combine(projectRootDir, "build", "load");
-
+var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))
 {
     Directory.Delete(outputsDir, true);
 }
 Directory.CreateDirectory(outputsDir);
 
-var font = BdfFont.Load(Path.Combine(assetsDir, "unifont", "unifont-16.0.02.bdf"));
+var font = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.02.bdf"));
 Console.WriteLine($"name: {font.Name}");
 Console.WriteLine($"size: {font.PointSize}");
 Console.WriteLine($"ascent: {font.Properties.FontAscent}");

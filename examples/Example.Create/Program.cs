@@ -1,8 +1,6 @@
 ﻿using BdfSpec;
 
-var projectRootDir = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", ".."));
-var outputsDir = Path.Combine(projectRootDir, "build", "create");
-
+var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))
 {
     Directory.Delete(outputsDir, true);
