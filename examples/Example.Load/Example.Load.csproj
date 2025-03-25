@@ -11,5 +11,9 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\BdfSpec\BdfSpec.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="..\..\assets\unifont\*.bdf" LinkBase="assets\unifont" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 
 </Project>
