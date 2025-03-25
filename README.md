@@ -1,4 +1,4 @@
-# BdfFont
+# BdfFont.NET
 
 [![.NET](https://img.shields.io/badge/dotnet-8.0-mediumpurple)](https://dotnet.microsoft.com)
 [![NuGet](https://img.shields.io/nuget/v/BdfFont)](https://www.nuget.org/packages/BdfFont)
@@ -135,4 +135,4 @@ font.Save(Path.Combine(outputsDir, "unifont-16.0.02.bdf"));
 
 ## License
 
-MIT License
+[MIT License](LICENSE)
