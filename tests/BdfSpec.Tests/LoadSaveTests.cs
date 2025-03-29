@@ -43,7 +43,7 @@ public class LoadSaveTests
     }
 
     [Fact]
-    public void TestMisakiGothic2Nd()
+    public void TestMisakiGothic2()
     {
         var loadPath = Path.Combine("assets", "misaki", "misaki_gothic_2nd.bdf");
         var savePath = Path.Combine(PathUtils.CreateTempDir(), "misaki_gothic_2nd.bdf");
@@ -53,7 +53,7 @@ public class LoadSaveTests
     }
 
     [Fact]
-    public async Task TestMisakiGothic2NdAsync()
+    public async Task TestMisakiGothic2Async()
     {
         var loadPath = Path.Combine("assets", "misaki", "misaki_gothic_2nd.bdf");
         var savePath = Path.Combine(PathUtils.CreateTempDir(), "misaki_gothic_2nd.bdf");
