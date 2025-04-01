@@ -175,17 +175,24 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
         }
     }
 
-    public class KeyCollection(List<TKey> keysData) : ICollection<TKey>
+    public class KeyCollection : ICollection<TKey>
     {
-        public int Count => keysData.Count;
+        private readonly List<TKey> _keysData;
+
+        public KeyCollection(List<TKey> keysData)
+        {
+            _keysData = keysData;
+        }
+
+        public int Count => _keysData.Count;
 
         bool ICollection<TKey>.IsReadOnly => true;
 
-        public IEnumerator<TKey> GetEnumerator() => keysData.GetEnumerator();
+        public IEnumerator<TKey> GetEnumerator() => _keysData.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public bool Contains(TKey item) => keysData.Contains(item);
+        public bool Contains(TKey item) => _keysData.Contains(item);
 
         void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
 
@@ -193,20 +200,27 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
 
         void ICollection<TKey>.Clear() => throw new NotSupportedException();
 
-        public void CopyTo(TKey[] array, int arrayIndex) => keysData.CopyTo(array, arrayIndex);
+        public void CopyTo(TKey[] array, int arrayIndex) => _keysData.CopyTo(array, arrayIndex);
     }
 
-    public class ValueCollection(List<TValue> valuesData) : ICollection<TValue>
+    public class ValueCollection : ICollection<TValue>
     {
-        public int Count => valuesData.Count;
+        private readonly List<TValue> _valuesData;
+
+        public ValueCollection(List<TValue> valuesData)
+        {
+            _valuesData = valuesData;
+        }
+
+        public int Count => _valuesData.Count;
 
         bool ICollection<TValue>.IsReadOnly => true;
 
-        public IEnumerator<TValue> GetEnumerator() => valuesData.GetEnumerator();
+        public IEnumerator<TValue> GetEnumerator() => _valuesData.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public bool Contains(TValue item) => valuesData.Contains(item);
+        public bool Contains(TValue item) => _valuesData.Contains(item);
 
         void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
 
@@ -214,6 +228,6 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
 
         void ICollection<TValue>.Clear() => throw new NotSupportedException();
 
-        public void CopyTo(TValue[] array, int arrayIndex) => valuesData.CopyTo(array, arrayIndex);
+        public void CopyTo(TValue[] array, int arrayIndex) => _valuesData.CopyTo(array, arrayIndex);
     }
 }

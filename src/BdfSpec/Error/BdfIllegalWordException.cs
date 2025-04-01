@@ -1,6 +1,6 @@
 namespace BdfSpec.Error;
 
-public class BdfIllegalWordException(string message, string word) : BdfParseException(message)
+public class BdfIllegalWordException : BdfParseException
 {
     public static BdfIllegalWordException Create(string word)
     {
@@ -8,5 +8,10 @@ public class BdfIllegalWordException(string message, string word) : BdfParseExce
         return new BdfIllegalWordException(message, word);
     }
 
-    public readonly string Word = word;
+    public readonly string Word;
+
+    private BdfIllegalWordException(string message, string word) : base(message)
+    {
+        Word = word;
+    }
 }

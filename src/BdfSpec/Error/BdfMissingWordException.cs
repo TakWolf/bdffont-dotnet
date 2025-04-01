@@ -1,6 +1,6 @@
 namespace BdfSpec.Error;
 
-public class BdfMissingWordException(string message, string word) : BdfParseException(message)
+public class BdfMissingWordException : BdfParseException
 {
     public static BdfMissingWordException Create(string word)
     {
@@ -8,5 +8,10 @@ public class BdfMissingWordException(string message, string word) : BdfParseExce
         return new BdfMissingWordException(message, word);
     }
 
-    public readonly string Word = word;
+    public readonly string Word;
+
+    private BdfMissingWordException(string message, string word) : base(message)
+    {
+        Word = word;
+    }
 }

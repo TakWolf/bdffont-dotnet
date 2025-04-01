@@ -1,3 +1,8 @@
 namespace BdfSpec.Error;
 
-public class BdfParseException(string message) : BdfException(message);
+public class BdfParseException : BdfException
+{
+    public BdfParseException(string message) : base(message)
+    {
+    }
+}
