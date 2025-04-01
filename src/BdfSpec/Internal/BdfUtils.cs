@@ -7,7 +7,7 @@ namespace BdfSpec.Internal;
 internal static partial class BdfUtils
 {
     private const string SpecVersion = "2.1";
-    
+
     private const string WordStartFont = "STARTFONT";
     private const string WordEndFont = "ENDFONT";
     private const string WordComment = "COMMENT";
@@ -24,10 +24,10 @@ internal static partial class BdfUtils
     private const string WordDWidth = "DWIDTH";
     private const string WordBbx = "BBX";
     private const string WordBitmap = "BITMAP";
-    
+
     [GeneratedRegex(@"\s+")]
     private static partial Regex RegexBlanks();
-    
+
     [GeneratedRegex(@"(\r\n|\r|\n)")]
     private static partial Regex RegexNewLine();
 
@@ -78,7 +78,7 @@ internal static partial class BdfUtils
         }
         return bitmapRow;
     }
-    
+
     private static string BitmapRowToHexString(List<byte> bitmapRow, int bitmapWidth)
     {
         bitmapWidth = bitmapWidth + 7 - (bitmapWidth + 7) % 8;
@@ -99,7 +99,7 @@ internal static partial class BdfUtils
         }
         return hexString.ToString().ToUpper();
     }
-    
+
     private static IEnumerator<(string, string)> CreateLinesEnumerator(TextReader reader)
     {
         while (reader.ReadLine() is { } line)
@@ -115,7 +115,7 @@ internal static partial class BdfUtils
             yield return (word, tail);
         }
     }
-    
+
     private static BdfProperties ParsePropertiesSegment(IEnumerator<(string, string)> lines, int count)
     {
         var properties = new BdfProperties();
@@ -140,7 +140,7 @@ internal static partial class BdfUtils
         }
         throw BdfMissingWordException.Create(WordEndProperties);
     }
-    
+
     private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int bitmapWidth)
     {
         List<List<byte>> bitmap = [];
@@ -322,7 +322,7 @@ internal static partial class BdfUtils
         }
         throw BdfMissingWordException.Create(WordStartFont);
     }
-    
+
     private static async IAsyncEnumerator<(string, string)> CreateLinesAsyncEnumerator(TextReader reader)
     {
         while (await reader.ReadLineAsync() is { } line)
@@ -338,7 +338,7 @@ internal static partial class BdfUtils
             yield return (word, tail);
         }
     }
-    
+
     private static async Task<BdfProperties> ParsePropertiesSegmentAsync(IAsyncEnumerator<(string, string)> lines, int count)
     {
         var properties = new BdfProperties();
@@ -381,7 +381,7 @@ internal static partial class BdfUtils
         }
         throw BdfMissingWordException.Create(WordEndChar);
     }
-    
+
     private static async Task<BdfGlyph> ParseGlyphSegmentAsync(IAsyncEnumerator<(string, string)> lines, string name)
     {
         int? encoding = null;
@@ -449,7 +449,7 @@ internal static partial class BdfUtils
         }
         throw BdfMissingWordException.Create(WordEndChar);
     }
-    
+
     private static async Task<BdfFont> ParseFontSegmentAsync(IAsyncEnumerator<(string, string)> lines)
     {
         string? name = null;
@@ -524,7 +524,7 @@ internal static partial class BdfUtils
         }
         throw BdfMissingWordException.Create(WordEndFont);
     }
-    
+
     public static async Task<BdfFont> ParseReaderAsync(TextReader reader)
     {
         var lines = CreateLinesAsyncEnumerator(reader);
@@ -545,7 +545,7 @@ internal static partial class BdfUtils
         }
         throw BdfMissingWordException.Create(WordStartFont);
     }
-    
+
     private static void DumpWordStringLine(TextWriter writer, string word, string? tail = null)
     {
         writer.Write(word);
@@ -599,7 +599,7 @@ internal static partial class BdfUtils
         DumpWordStringLine(writer, WordFont, font.Name);
         DumpWordIntsLine(writer, WordSize, font.PointSize, font.ResolutionX, font.ResolutionY);
         DumpWordIntsLine(writer, WordFontBoundingBox, font.Width, font.Height, font.OffsetX, font.OffsetY);
-        
+
         DumpWordIntsLine(writer, WordStartProperties, font.Properties.Count);
         foreach (var comment in font.Properties.Comments)
         {
@@ -610,7 +610,7 @@ internal static partial class BdfUtils
             DumpPropertiesLine(writer, pair.Key, pair.Value);
         }
         DumpWordStringLine(writer, WordEndProperties);
-        
+
         DumpWordIntsLine(writer, WordChars, font.Glyphs.Count);
         foreach (var glyph in font.Glyphs)
         {
@@ -632,10 +632,10 @@ internal static partial class BdfUtils
 
             DumpWordStringLine(writer, WordEndChar);
         }
-        
+
         DumpWordStringLine(writer, WordEndFont);
     }
-    
+
     private static async Task DumpWordStringLineAsync(TextWriter writer, string word, string? tail = null)
     {
         await writer.WriteAsync(word);
@@ -689,7 +689,7 @@ internal static partial class BdfUtils
         await DumpWordStringLineAsync(writer, WordFont, font.Name);
         await DumpWordIntsLineAsync(writer, WordSize, font.PointSize, font.ResolutionX, font.ResolutionY);
         await DumpWordIntsLineAsync(writer, WordFontBoundingBox, font.Width, font.Height, font.OffsetX, font.OffsetY);
-        
+
         await DumpWordIntsLineAsync(writer, WordStartProperties, font.Properties.Count);
         foreach (var comment in font.Properties.Comments)
         {
@@ -700,7 +700,7 @@ internal static partial class BdfUtils
             await DumpPropertiesLineAsync(writer, pair.Key, pair.Value);
         }
         await DumpWordStringLineAsync(writer, WordEndProperties);
-        
+
         await DumpWordIntsLineAsync(writer, WordChars, font.Glyphs.Count);
         foreach (var glyph in font.Glyphs)
         {
@@ -719,10 +719,10 @@ internal static partial class BdfUtils
             {
                 await writer.WriteAsync($"{BitmapRowToHexString(bitmapRow, glyph.Width)}\n");
             }
-            
+
             await DumpWordStringLineAsync(writer, WordEndChar);
         }
-        
+
         await DumpWordStringLineAsync(writer, WordEndFont);
     }
 }

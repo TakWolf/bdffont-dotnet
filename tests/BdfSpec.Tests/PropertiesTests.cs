@@ -7,12 +7,12 @@ public class PropertiesTests
     [Fact]
     public void TestProperties1()
     {
-        var properties = new BdfProperties(new Dictionary<string, object> 
-        { 
+        var properties = new BdfProperties(new Dictionary<string, object>
+        {
             { "PARAM_1", 1 },
             { "param_2", "2" },
         }, comments: [
-            "This is a comment.", 
+            "This is a comment.",
             "This is a comment, too."
         ]);
 
@@ -23,7 +23,7 @@ public class PropertiesTests
         Assert.Equal("This is a comment.", properties.Comments[0]);
         Assert.Equal("This is a comment, too.", properties.Comments[1]);
     }
-    
+
     [Fact]
     public void TestProperties2()
     {
@@ -88,7 +88,7 @@ public class PropertiesTests
         Assert.Equal(14, properties.Count);
         Assert.Equal("-TakWolf Studio-Demo Pixel-Medium-R-Normal-Sans Serif-16-160-75-240-M-85-ISO8859-1", properties.ToXlfd());
     }
-    
+
     [Fact]
     public void TestProperties3()
     {
@@ -136,7 +136,7 @@ public class PropertiesTests
         Assert.Null(properties.CharsetEncoding);
         Assert.Equal(fontName, properties.ToXlfd());
     }
-    
+
     [Fact]
     public void TestProperties5()
     {
@@ -150,11 +150,11 @@ public class PropertiesTests
     public void TestProperties6()
     {
         var properties = new BdfProperties();
-        
+
         var e = Assert.Throws<BdfXlfdException>(() => properties.UpdateByXlfd("-Bitstream-Charter-Medium-R-Normal--12-120-75-75-P-68-ISO8859-1-"));
         Assert.Equal("Must be 14 '-'.", e.Message);
     }
-    
+
     [Fact]
     public void TestProperties7()
     {
@@ -182,7 +182,7 @@ public class PropertiesTests
 
         Assert.Equal(5, properties.Count);
     }
-    
+
     [Fact]
     public void TestProperties8()
     {
@@ -202,7 +202,7 @@ public class PropertiesTests
 
         Assert.Equal(3, properties.Count);
     }
-    
+
     [Fact]
     public void TestProperties9()
     {
@@ -217,7 +217,7 @@ public class PropertiesTests
     public void TestProperties10()
     {
         var properties = new BdfProperties();
-        
+
         var e = Assert.Throws<BdfKeyException>(() => properties["abc-def"] = "abcdef");
         Assert.Equal("Contains illegal characters.", e.Message);
     }
@@ -239,7 +239,7 @@ public class PropertiesTests
         var e = Assert.Throws<BdfValueException>(() => properties.SetValue("Foundry", 1));
         Assert.Equal("Expected type 'string', got 'System.Int32' instead.", e.Message);
     }
-    
+
     [Fact]
     public void TestProperties13()
     {
@@ -248,7 +248,7 @@ public class PropertiesTests
         var e = Assert.Throws<BdfValueException>(() => properties.SetValue("PIXEL_SIZE", "1"));
         Assert.Equal("Expected type 'int', got 'System.String' instead.", e.Message);
     }
-    
+
     [Fact]
     public void TestProperties14()
     {
@@ -257,7 +257,7 @@ public class PropertiesTests
         var e = Assert.Throws<BdfValueException>(() => properties.SetValue("FLOAT_PARAM", 1.2));
         Assert.Equal("Expected type 'string' or 'int', got 'System.Double' instead.", e.Message);
     }
-    
+
     [Fact]
     public void TestProperties15()
     {

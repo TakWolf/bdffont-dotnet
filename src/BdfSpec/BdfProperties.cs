@@ -88,10 +88,10 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         KeyCharsetRegistry,
         KeyCharsetEncoding,
     ];
-    
+
     [GeneratedRegex("^[a-zA-Z0-9_]*$")]
     private static partial Regex RegexPropKey();
-    
+
     [GeneratedRegex("[-?*,\"]")]
     private static partial Regex RegexXlfdValue();
 
@@ -102,7 +102,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             throw new BdfKeyException("Contains illegal characters.");
         }
     }
-    
+
     private static void CheckValue(string key, object value)
     {
         if (StringValueKeys.Contains(key))
@@ -129,17 +129,17 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
 
         if (XlfdStringValueKeys.Contains(key))
         {
-            if (RegexXlfdValue().IsMatch((string) value))
+            if (RegexXlfdValue().IsMatch((string)value))
             {
                 throw new BdfValueException("Contains illegal characters.");
             }
-        }   
+        }
     }
 
     private static BdfKeyException CreateKeyNotFoundException(string key) => new($"The given key '{key}' was not present in the dictionary.");
 
     private static BdfKeyException CreateKeyNotStringException(object key) => new($"Expected type 'string', got '{key.GetType()}' instead.");
- 
+
     private static BdfKeyException CreateKeyAlreadyExistsException(string key) => new($"An element with the same key '{key}' already exists.");
 
     private static ArgumentException CreateItemNotPairException(object item) => new($"Expected type '{typeof(KeyValuePair<string, object>)}', got '{item.GetType()}' instead.", nameof(item));
@@ -148,9 +148,9 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
     private readonly List<object> _valuesData = [];
     private KeyCollection? _keys;
     private ValueCollection? _values;
-    
+
     public List<string> Comments;
-    
+
     public BdfProperties(
         IDictionary<string, object>? data = null,
         List<string>? comments = null)
@@ -164,39 +164,39 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
         Comments = comments ?? [];
     }
-    
+
     public int Count => _keysData.Count;
 
     bool ICollection<KeyValuePair<string, object>>.IsReadOnly => false;
-    
+
     bool IDictionary.IsReadOnly => false;
 
     bool IList.IsReadOnly => false;
-    
+
     bool IDictionary.IsFixedSize => false;
-    
+
     bool IList.IsFixedSize => false;
-    
+
     bool ICollection.IsSynchronized => false;
 
     object ICollection.SyncRoot => this;
-    
+
     public object? GetValue(string key)
     {
         var index = _keysData.IndexOf(key.ToUpper());
         return index >= 0 ? _valuesData[index] : null;
     }
 
-    public string? GetStringValue(string key) => (string?) GetValue(key);
-    
-    public int? GetIntValue(string key) => (int?) GetValue(key);
-    
+    public string? GetStringValue(string key) => (string?)GetValue(key);
+
+    public int? GetIntValue(string key) => (int?)GetValue(key);
+
     public void SetValue(string key, object? value)
     {
         key = key.ToUpper();
         CheckKey(key);
         var index = _keysData.IndexOf(key);
-        
+
         if (value is null)
         {
             if (index >= 0)
@@ -206,7 +206,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             }
             return;
         }
-        
+
         CheckValue(key, value);
         if (index >= 0)
         {
@@ -218,7 +218,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             _valuesData.Add(value);
         }
     }
-    
+
     public string GetKeyAt(int index) => _keysData[index];
 
     public object GetValueAt(int index) => _valuesData[index];
@@ -236,9 +236,9 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         value = null;
         return false;
     }
-    
+
     bool IReadOnlyDictionary<string, object>.TryGetValue(string key, [MaybeNullWhen(false)] out object value) => TryGetValue(key, out value);
-    
+
     public void SetAt(int index, object? value)
     {
         if (value is null)
@@ -247,12 +247,12 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             _valuesData.RemoveAt(index);
             return;
         }
-        
+
         var key = _keysData[index];
         CheckValue(key, value);
         _valuesData[index] = value;
     }
-    
+
     public void SetAt(int index, string key, object value)
     {
         key = key.ToUpper();
@@ -274,7 +274,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
     }
 
     object IReadOnlyDictionary<string, object>.this[string key] => GetValue(key) ?? throw CreateKeyNotFoundException(key);
-    
+
     object? IDictionary.this[object key]
     {
         get => key is string stringKey ? GetValue(stringKey) : null;
@@ -287,7 +287,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             SetValue(stringKey, value);
         }
     }
-    
+
     KeyValuePair<string, object> IList<KeyValuePair<string, object>>.this[int index]
     {
         get => GetAt(index);
@@ -295,7 +295,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
     }
 
     KeyValuePair<string, object> IReadOnlyList<KeyValuePair<string, object>>.this[int index] => GetAt(index);
-    
+
     object? IList.this[int index]
     {
         get => GetAt(index);
@@ -314,7 +314,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             }
         }
     }
-    
+
     public void Add(string key, object value)
     {
         key = key.ToUpper();
@@ -322,13 +322,13 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         {
             throw CreateKeyAlreadyExistsException(key);
         }
-        
+
         CheckKey(key);
         CheckValue(key, value);
         _keysData.Add(key);
         _valuesData.Add(value);
     }
-    
+
     public void Add(KeyValuePair<string, object> pair) => Add(pair.Key, pair.Value);
 
     void IDictionary.Add(object key, object? value)
@@ -343,7 +343,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
         Add(stringKey, value);
     }
-    
+
     int IList.Add(object? item)
     {
         switch (item)
@@ -365,15 +365,15 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         {
             throw CreateKeyAlreadyExistsException(key);
         }
-        
+
         CheckKey(key);
         CheckValue(key, value);
         _keysData.Insert(index, key);
         _valuesData.Insert(index, value);
     }
-    
+
     public void Insert(int index, KeyValuePair<string, object> pair) => Insert(index, pair.Key, pair.Value);
-    
+
     void IList.Insert(int index, object? item)
     {
         switch (item)
@@ -387,7 +387,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
                 throw CreateItemNotPairException(item);
         }
     }
-    
+
     public bool Remove(string key)
     {
         var index = _keysData.IndexOf(key.ToUpper());
@@ -426,7 +426,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
         Remove(stringKey);
     }
-    
+
     void IList.Remove(object? item)
     {
         if (item is KeyValuePair<string, object> pair)
@@ -434,31 +434,31 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             Remove(pair);
         }
     }
-    
+
     public void RemoveAt(int index)
     {
         _keysData.RemoveAt(index);
         _valuesData.RemoveAt(index);
     }
-    
+
     public void Clear()
     {
         _keysData.Clear();
         _valuesData.Clear();
     }
-    
+
     public bool ContainsKey(string key) => _keysData.Contains(key.ToUpper());
 
     public bool ContainsValue(object value) => _valuesData.Contains(value);
-    
-    public bool ContainsPair(string key, object value) => Equals(GetValue(key), value); 
-    
-    public bool ContainsPair(KeyValuePair<string, object> pair) => ContainsPair(pair.Key, pair.Value); 
-    
+
+    public bool ContainsPair(string key, object value) => Equals(GetValue(key), value);
+
+    public bool ContainsPair(KeyValuePair<string, object> pair) => ContainsPair(pair.Key, pair.Value);
+
     bool IReadOnlyDictionary<string, object>.ContainsKey(string key) => ContainsKey(key);
 
     bool IDictionary.Contains(object key) => key is string stringKey && ContainsKey(stringKey);
-    
+
     bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> pair) => ContainsPair(pair);
 
     bool IList.Contains(object? item) => item is KeyValuePair<string, object> pair && ContainsPair(pair);
@@ -474,11 +474,11 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
     }
 
     public int IndexOfPair(KeyValuePair<string, object> pair) => IndexOfPair(pair.Key, pair.Value);
-    
+
     int IList<KeyValuePair<string, object>>.IndexOf(KeyValuePair<string, object> pair) => IndexOfPair(pair);
 
     int IList.IndexOf(object? item) => item is KeyValuePair<string, object> pair ? IndexOfPair(pair) : -1;
-    
+
     public void CopyTo(KeyValuePair<string, object>[] array, int index)
     {
         foreach (var pair in this)
@@ -511,9 +511,9 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
         CopyTo(pairArray, index);
     }
-    
+
     public KeyCollection Keys => _keys ??= new KeyCollection(this);
-    
+
     IEnumerable<string> IReadOnlyDictionary<string, object>.Keys => Keys;
 
     ICollection<string> IDictionary<string, object>.Keys => Keys;
@@ -521,7 +521,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
     ICollection IDictionary.Keys => Keys;
 
     public ValueCollection Values => _values ??= new ValueCollection(this);
-    
+
     IEnumerable<object> IReadOnlyDictionary<string, object>.Values => Values;
 
     ICollection<object> IDictionary<string, object>.Values => Values;
@@ -529,13 +529,13 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
     ICollection IDictionary.Values => Values;
 
     public Enumerator GetEnumerator() => new(this);
-    
+
     IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator() => GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     IDictionaryEnumerator IDictionary.GetEnumerator() => GetEnumerator();
-    
+
     public string? Foundry
     {
         get => GetStringValue(KeyFoundry);
@@ -613,7 +613,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         get => GetStringValue(KeyCharsetRegistry);
         set => SetValue(KeyCharsetRegistry, value);
     }
-    
+
     public string? CharsetEncoding
     {
         get => GetStringValue(KeyCharsetEncoding);
@@ -707,7 +707,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             SetValue(key, value);
         }
     }
-    
+
     public sealed class KeyCollection : IList<string>, IReadOnlyList<string>, IList
     {
         private readonly BdfProperties _properties;
@@ -720,21 +720,21 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         public int Count => _properties.Count;
 
         bool ICollection<string>.IsReadOnly => true;
-        
+
         bool IList.IsReadOnly => true;
-        
+
         bool IList.IsFixedSize => false;
-        
+
         bool ICollection.IsSynchronized => false;
 
         object ICollection.SyncRoot => (_properties as ICollection).SyncRoot;
-        
+
         string IList<string>.this[int index]
         {
             get => _properties.GetKeyAt(index);
             set => throw new NotSupportedException();
         }
-        
+
         object? IList.this[int index]
         {
             get => _properties.GetKeyAt(index);
@@ -742,44 +742,44 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
 
         string IReadOnlyList<string>.this[int index] => _properties.GetKeyAt(index);
-        
+
         public bool Contains(string key) => _properties.ContainsKey(key);
 
         bool IList.Contains(object? key) => key is string stringKey && Contains(stringKey);
-        
+
         public int IndexOf(string key) => _properties.IndexOfKey(key);
 
         int IList.IndexOf(object? key) => key is string stringKey ? IndexOf(stringKey) : -1;
-        
+
         public void CopyTo(string[] array, int index) => _properties._keysData.CopyTo(array, index);
 
         void ICollection.CopyTo(Array array, int index) => (_properties._keysData as ICollection).CopyTo(array, index);
-        
+
         public IEnumerator<string> GetEnumerator() => _properties._keysData.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        
+
         void ICollection<string>.Add(string key) => throw new NotSupportedException();
-        
+
         int IList.Add(object? item) => throw new NotSupportedException();
-        
+
         void IList<string>.Insert(int index, string key) => throw new NotSupportedException();
 
         void IList.Insert(int index, object? item) => throw new NotSupportedException();
-        
+
         bool ICollection<string>.Remove(string key) => throw new NotSupportedException();
 
         void IList.Remove(object? item) => throw new NotSupportedException();
-        
+
         void IList<string>.RemoveAt(int index) => throw new NotSupportedException();
-        
+
         void IList.RemoveAt(int index) => throw new NotSupportedException();
-        
+
         void ICollection<string>.Clear() => throw new NotSupportedException();
-        
+
         void IList.Clear() => throw new NotSupportedException();
     }
-    
+
     public sealed class ValueCollection : IList<object>, IReadOnlyList<object>, IList
     {
         private readonly BdfProperties _properties;
@@ -792,21 +792,21 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         public int Count => _properties.Count;
 
         bool ICollection<Object>.IsReadOnly => true;
-        
+
         bool IList.IsReadOnly => true;
-        
+
         bool IList.IsFixedSize => false;
-        
+
         bool ICollection.IsSynchronized => false;
 
         object ICollection.SyncRoot => (_properties as ICollection).SyncRoot;
-        
+
         object IList<object>.this[int index]
         {
             get => _properties.GetValueAt(index);
             set => throw new NotSupportedException();
         }
-        
+
         object? IList.this[int index]
         {
             get => _properties.GetValueAt(index);
@@ -814,41 +814,41 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
 
         object IReadOnlyList<object>.this[int index] => _properties.GetValueAt(index);
-        
+
         public bool Contains(object value) => _properties.ContainsValue(value);
 
         bool IList.Contains(object? value) => value is not null && Contains(value);
-        
+
         public int IndexOf(object value) => _properties.IndexOfValue(value);
 
         int IList.IndexOf(object? value) => value is not null ? IndexOf(value) : -1;
-        
+
         public void CopyTo(object[] array, int index) => _properties._valuesData.CopyTo(array, index);
 
         void ICollection.CopyTo(Array array, int index) => (_properties._valuesData as ICollection).CopyTo(array, index);
-        
+
         public IEnumerator<object> GetEnumerator() => _properties._valuesData.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        
+
         void ICollection<object>.Add(object value) => throw new NotSupportedException();
-        
+
         int IList.Add(object? item) => throw new NotSupportedException();
-        
+
         void IList<object>.Insert(int index, object value) => throw new NotSupportedException();
 
         void IList.Insert(int index, object? item) => throw new NotSupportedException();
-        
+
         bool ICollection<object>.Remove(object value) => throw new NotSupportedException();
 
         void IList.Remove(object? item) => throw new NotSupportedException();
-        
+
         void IList<object>.RemoveAt(int index) => throw new NotSupportedException();
-        
+
         void IList.RemoveAt(int index) => throw new NotSupportedException();
-        
+
         void ICollection<object>.Clear() => throw new NotSupportedException();
-        
+
         void IList.Clear() => throw new NotSupportedException();
     }
 
@@ -878,7 +878,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         object IDictionaryEnumerator.Key => Current.Key;
 
         object IDictionaryEnumerator.Value => Current.Value;
-        
+
         public bool MoveNext() => _enumerator.MoveNext();
 
         void IEnumerator.Reset() => _enumerator.Reset();

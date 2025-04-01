@@ -5,12 +5,12 @@ var outputsDir = Path.Combine(projectRootDir, "build", "create");
 
 if (Directory.Exists(outputsDir))
 {
-    Directory.Delete(outputsDir, true);    
+    Directory.Delete(outputsDir, true);
 }
 Directory.CreateDirectory(outputsDir);
 
 var font = new BdfFont(
-    pointSize: 16, 
+    pointSize: 16,
     resolution: (75, 75),
     boundingBox: (16, 16, 0, -2));
 

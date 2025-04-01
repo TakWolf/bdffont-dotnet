@@ -11,7 +11,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         File.WriteAllText(savePath, font.DumpToString().Replace("\nBITMAP\n", "\nBITMAP \n"));
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r", ""), File.ReadAllText(savePath));
     }
-    
+
     [Fact]
     public async Task TestUnifontAsync()
     {
@@ -21,7 +21,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         await File.WriteAllTextAsync(savePath, (await font.DumpToStringAsync()).Replace("\nBITMAP\n", "\nBITMAP \n"));
         Assert.Equal((await File.ReadAllTextAsync(loadPath)).Replace("\r", ""), await File.ReadAllTextAsync(savePath));
     }
-    
+
     [Fact]
     public void TestMisakiGothic()
     {
@@ -31,7 +31,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r", ""), File.ReadAllText(savePath));
     }
-    
+
     [Fact]
     public async Task TestMisakiGothicAsync()
     {
@@ -41,7 +41,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         await font.SaveAsync(savePath);
         Assert.Equal((await File.ReadAllTextAsync(loadPath)).Replace("\r", ""), await File.ReadAllTextAsync(savePath));
     }
-    
+
     [Fact]
     public void TestMisakiGothic2Nd()
     {
@@ -51,7 +51,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r", ""), File.ReadAllText(savePath));
     }
-    
+
     [Fact]
     public async Task TestMisakiGothic2NdAsync()
     {
@@ -61,7 +61,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         await font.SaveAsync(savePath);
         Assert.Equal((await File.ReadAllTextAsync(loadPath)).Replace("\r", ""), await File.ReadAllTextAsync(savePath));
     }
-    
+
     [Fact]
     public void TestMisakiMincho()
     {
@@ -71,7 +71,7 @@ public class LoadSaveTests : IClassFixture<PathFixture>
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r", ""), File.ReadAllText(savePath));
     }
-    
+
     [Fact]
     public async Task TestMisakiMinchoAsync()
     {

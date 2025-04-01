@@ -33,7 +33,7 @@ public class GlyphTests
         Assert.Equal((7, 8), glyph.Offset);
         Assert.Equal(7, glyph.OffsetX);
         Assert.Equal(8, glyph.OffsetY);
-        
+
         glyph.BoundingBox = (9, 10, 11, 12);
         Assert.Equal((9, 10, 11, 12), glyph.BoundingBox);
         Assert.Equal(9, glyph.Width);

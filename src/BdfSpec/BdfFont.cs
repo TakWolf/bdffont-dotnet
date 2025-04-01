@@ -8,30 +8,30 @@ public class BdfFont
     {
         return BdfUtils.ParseReader(reader);
     }
-    
+
     public static BdfFont Parse(string text)
     {
         using var reader = new StringReader(text);
         return Parse(reader);
     }
-    
+
     public static BdfFont Load(string path)
     {
         using var reader = new StreamReader(path);
         return Parse(reader);
     }
-    
+
     public static async Task<BdfFont> ParseAsync(TextReader reader)
     {
         return await BdfUtils.ParseReaderAsync(reader);
     }
-    
+
     public static async Task<BdfFont> ParseAsync(string text)
     {
         using var reader = new StringReader(text);
         return await ParseAsync(reader);
     }
-    
+
     public static async Task<BdfFont> LoadAsync(string path)
     {
         using var reader = new StreamReader(path);
@@ -73,7 +73,7 @@ public class BdfFont
         get => (ResolutionX, ResolutionY);
         set => (ResolutionX, ResolutionY) = value;
     }
-    
+
     public (int, int) Dimensions
     {
         get => (Width, Height);
@@ -103,7 +103,7 @@ public class BdfFont
         ResolutionX = Properties.ResolutionX ?? 0;
         ResolutionY = Properties.ResolutionY ?? 0;
     }
-    
+
     public void Dump(TextWriter writer)
     {
         BdfUtils.DumpWriter(writer, this);

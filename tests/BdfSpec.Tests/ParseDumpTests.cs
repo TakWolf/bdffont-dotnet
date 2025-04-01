@@ -10,7 +10,7 @@ public class ParseDumpTests
         var data = File.ReadAllText(Path.Combine(PathDefine.AssetsDir, "demo.bdf"));
         var font = BdfFont.Parse(data);
         Assert.Equal(data.Replace("\r", ""), font.DumpToString());
-        
+
         Assert.Equal("-Adobe-Helvetica-Bold-R-Normal--24-240-75-75-P-65-ISO8859-1", font.Name);
         Assert.Equal(24, font.PointSize);
         Assert.Equal(75, font.ResolutionX);
@@ -24,7 +24,7 @@ public class ParseDumpTests
         Assert.Equal((-2, -6), font.Offset);
         Assert.Equal((9, 24, -2, -6), font.BoundingBox);
         Assert.Equal(["This is a sample font in 2.1 format."], font.Comments);
-        
+
         Assert.Equal(19, font.Properties.Count);
         Assert.Equal("Adobe", font.Properties.Foundry);
         Assert.Equal("Helvetica", font.Properties.FamilyName);
@@ -46,7 +46,7 @@ public class ParseDumpTests
         Assert.Equal("Copyright (c) 1987 Adobe Systems, Inc.", font.Properties.Copyright);
         Assert.Equal("Helvetica is a registered trademark of Linotype Inc.", font.Properties.Notice);
         Assert.Equal(["This is a comment in properties."], font.Properties.Comments);
-        
+
         Assert.Equal(2, font.Glyphs.Count);
         var glyph = font.Glyphs.ToDictionary(glyph => glyph.Encoding, glyph => glyph)[39];
         Assert.Equal("quoteright", glyph.Name);
@@ -74,14 +74,14 @@ public class ParseDumpTests
         ], glyph.Bitmap);
         Assert.Equal(["This is a comment in char."], glyph.Comments);
     }
-    
+
     [Fact]
     public async Task TestDemoAsync()
     {
         var data = await File.ReadAllTextAsync(Path.Combine(PathDefine.AssetsDir, "demo.bdf"));
         var font = await BdfFont.ParseAsync(data);
         Assert.Equal(data.Replace("\r", ""), await font.DumpToStringAsync());
-        
+
         Assert.Equal("-Adobe-Helvetica-Bold-R-Normal--24-240-75-75-P-65-ISO8859-1", font.Name);
         Assert.Equal(24, font.PointSize);
         Assert.Equal(75, font.ResolutionX);
@@ -95,7 +95,7 @@ public class ParseDumpTests
         Assert.Equal((-2, -6), font.Offset);
         Assert.Equal((9, 24, -2, -6), font.BoundingBox);
         Assert.Equal(["This is a sample font in 2.1 format."], font.Comments);
-        
+
         Assert.Equal(19, font.Properties.Count);
         Assert.Equal("Adobe", font.Properties.Foundry);
         Assert.Equal("Helvetica", font.Properties.FamilyName);
@@ -117,7 +117,7 @@ public class ParseDumpTests
         Assert.Equal("Copyright (c) 1987 Adobe Systems, Inc.", font.Properties.Copyright);
         Assert.Equal("Helvetica is a registered trademark of Linotype Inc.", font.Properties.Notice);
         Assert.Equal(["This is a comment in properties."], font.Properties.Comments);
-        
+
         Assert.Equal(2, font.Glyphs.Count);
         var glyph = font.Glyphs.ToDictionary(glyph => glyph.Encoding, glyph => glyph)[39];
         Assert.Equal("quoteright", glyph.Name);
@@ -145,7 +145,7 @@ public class ParseDumpTests
         ], glyph.Bitmap);
         Assert.Equal(["This is a comment in char."], glyph.Comments);
     }
-    
+
     [Fact]
     public void TestMultiLine1()
     {
@@ -154,7 +154,7 @@ public class ParseDumpTests
         var e = Assert.Throws<BdfDumpException>(() => font.DumpToString());
         Assert.Equal("Tail cannot be multi-line string.", e.Message);
     }
-    
+
     [Fact]
     public async Task TestMultiLine1Async()
     {
@@ -172,7 +172,7 @@ public class ParseDumpTests
         var e = Assert.Throws<BdfDumpException>(() => font.DumpToString());
         Assert.Equal("Properties value cannot be multi-line string.", e.Message);
     }
-    
+
     [Fact]
     public async Task TestMultiLine2Async()
     {
@@ -181,7 +181,7 @@ public class ParseDumpTests
         var e = await Assert.ThrowsAsync<BdfDumpException>(async () => await font.DumpToStringAsync());
         Assert.Equal("Properties value cannot be multi-line string.", e.Message);
     }
-    
+
     [Fact]
     public void TestMultiLine3()
     {
@@ -190,7 +190,7 @@ public class ParseDumpTests
         var e = Assert.Throws<BdfDumpException>(() => font.DumpToString());
         Assert.Equal("Tail cannot be multi-line string.", e.Message);
     }
-    
+
     [Fact]
     public async Task TestMultiLine3Async()
     {
@@ -199,7 +199,7 @@ public class ParseDumpTests
         var e = await Assert.ThrowsAsync<BdfDumpException>(async () => await font.DumpToStringAsync());
         Assert.Equal("Tail cannot be multi-line string.", e.Message);
     }
-    
+
     [Fact]
     public void TestMultiLine4()
     {
@@ -211,7 +211,7 @@ public class ParseDumpTests
         var e = Assert.Throws<BdfDumpException>(() => font.DumpToString());
         Assert.Equal("Tail cannot be multi-line string.", e.Message);
     }
-    
+
     [Fact]
     public async Task TestMultiLine4Async()
     {

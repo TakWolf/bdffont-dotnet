@@ -55,7 +55,7 @@ public class FontTests
         font.Properties.AverageWidth = 80;
         font.Properties.CharsetRegistry = "ISO10646";
         font.Properties.CharsetEncoding = "1";
-            
+
         font.GenerateNameAsXlfd();
         Assert.Equal("-TakWolf Studio-Demo Pixel-Medium-R-Normal-Sans Serif-16-160-75-75-P-80-ISO10646-1", font.Name);
     }
@@ -64,7 +64,7 @@ public class FontTests
     public void TestFont3()
     {
         var font = new BdfFont();
-        
+
         var e = Assert.Throws<BdfXlfdException>(() => font.UpdateByNameAsXlfd());
         Assert.Equal("Not starts with '-'.", e.Message);
 

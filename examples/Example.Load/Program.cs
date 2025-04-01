@@ -6,7 +6,7 @@ var outputsDir = Path.Combine(projectRootDir, "build", "load");
 
 if (Directory.Exists(outputsDir))
 {
-    Directory.Delete(outputsDir, true);    
+    Directory.Delete(outputsDir, true);
 }
 Directory.CreateDirectory(outputsDir);
 
