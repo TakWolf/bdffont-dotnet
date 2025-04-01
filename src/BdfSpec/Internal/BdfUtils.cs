@@ -105,7 +105,7 @@ internal static partial class BdfUtils
         while (reader.ReadLine() is { } line)
         {
             line = line.Trim();
-            if (Equals(line, ""))
+            if (Equals("", line))
             {
                 continue;
             }
@@ -208,7 +208,7 @@ internal static partial class BdfUtils
                         throw BdfMissingWordException.Create(WordBbx);
                     }
                     List<List<byte>>? bitmap = null;
-                    if (Equals(word, WordBitmap))
+                    if (Equals(WordBitmap, word))
                     {
                         bitmap = ParseBitmapSegment(lines, boundingBox.Value.Item1);
                     }
@@ -311,7 +311,7 @@ internal static partial class BdfUtils
             switch (word)
             {
                 case WordStartFont:
-                    if (!Equals(tail, SpecVersion))
+                    if (!Equals(SpecVersion, tail))
                     {
                         throw new BdfParseException($"Spec version not support: {tail}");
                     }
@@ -328,7 +328,7 @@ internal static partial class BdfUtils
         while (await reader.ReadLineAsync() is { } line)
         {
             line = line.Trim();
-            if (Equals(line, ""))
+            if (Equals("", line))
             {
                 continue;
             }
@@ -431,7 +431,7 @@ internal static partial class BdfUtils
                         throw BdfMissingWordException.Create(WordBbx);
                     }
                     List<List<byte>>? bitmap = null;
-                    if (Equals(word, WordBitmap))
+                    if (Equals(WordBitmap, word))
                     {
                         bitmap = await ParseBitmapSegmentAsync(lines, boundingBox.Value.Item1);
                     }
@@ -534,7 +534,7 @@ internal static partial class BdfUtils
             switch (word)
             {
                 case WordStartFont:
-                    if (!Equals(tail, SpecVersion))
+                    if (!Equals(SpecVersion, tail))
                     {
                         throw new BdfParseException($"Spec version not support: {tail}");
                     }
@@ -552,7 +552,7 @@ internal static partial class BdfUtils
         if (tail is not null)
         {
             tail = tail.Trim();
-            if (!Equals(tail, ""))
+            if (!Equals("", tail))
             {
                 if (RegexNewLine().IsMatch(tail))
                 {
@@ -642,7 +642,7 @@ internal static partial class BdfUtils
         if (tail is not null)
         {
             tail = tail.Trim();
-            if (!Equals(tail, ""))
+            if (!Equals("", tail))
             {
                 if (RegexNewLine().IsMatch(tail))
                 {
