@@ -9,7 +9,7 @@ public class ParseDumpTests
     {
         var data = File.ReadAllText(Path.Combine("assets", "demo.bdf"));
         var font = BdfFont.Parse(data);
-        Assert.Equal(data.Replace("\r", ""), font.DumpToString());
+        Assert.Equal(data.Replace("\r\n", "\n"), font.DumpToString());
 
         Assert.Equal("-Adobe-Helvetica-Bold-R-Normal--24-240-75-75-P-65-ISO8859-1", font.Name);
         Assert.Equal(24, font.PointSize);
@@ -80,7 +80,7 @@ public class ParseDumpTests
     {
         var data = await File.ReadAllTextAsync(Path.Combine("assets", "demo.bdf"));
         var font = await BdfFont.ParseAsync(data);
-        Assert.Equal(data.Replace("\r", ""), await font.DumpToStringAsync());
+        Assert.Equal(data.Replace("\r\n", "\n"), await font.DumpToStringAsync());
 
         Assert.Equal("-Adobe-Helvetica-Bold-R-Normal--24-240-75-75-P-65-ISO8859-1", font.Name);
         Assert.Equal(24, font.PointSize);
