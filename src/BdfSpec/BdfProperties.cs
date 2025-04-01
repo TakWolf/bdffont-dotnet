@@ -2,10 +2,11 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using BdfSpec.Error;
+using BdfSpec.Internal;
 
 namespace BdfSpec;
 
-public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDictionary<string, object>, IDictionary, IList<KeyValuePair<string, object>>, IReadOnlyList<KeyValuePair<string, object>>, IList
+public partial class BdfProperties : IDictionary<string, object>, IList<KeyValuePair<string, object>>
 {
     private const string KeyFoundry = "FOUNDRY";
     private const string KeyFamilyName = "FAMILY_NAME";
@@ -136,18 +137,7 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         }
     }
 
-    private static BdfKeyException CreateKeyNotFoundException(string key) => new($"The given key '{key}' was not present in the dictionary.");
-
-    private static BdfKeyException CreateKeyNotStringException(object key) => new($"Expected type 'string', got '{key.GetType()}' instead.");
-
-    private static BdfKeyException CreateKeyAlreadyExistsException(string key) => new($"An element with the same key '{key}' already exists.");
-
-    private static ArgumentException CreateItemNotPairException(object item) => new($"Expected type '{typeof(KeyValuePair<string, object>)}', got '{item.GetType()}' instead.", nameof(item));
-
-    private readonly List<string> _keysData = [];
-    private readonly List<object> _valuesData = [];
-    private KeyCollection? _keys;
-    private ValueCollection? _values;
+    private readonly OrderedDictionary<string, object> _dictionary = new();
 
     public List<string> Comments;
 
@@ -165,27 +155,87 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
         Comments = comments ?? [];
     }
 
-    public int Count => _keysData.Count;
+    public int Count => _dictionary.Count;
 
     bool ICollection<KeyValuePair<string, object>>.IsReadOnly => false;
 
-    bool IDictionary.IsReadOnly => false;
+    public ICollection<string> Keys => _dictionary.Keys;
 
-    bool IList.IsReadOnly => false;
+    public ICollection<object> Values => _dictionary.Values;
 
-    bool IDictionary.IsFixedSize => false;
+    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _dictionary.GetEnumerator();
 
-    bool IList.IsFixedSize => false;
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    bool ICollection.IsSynchronized => false;
-
-    object ICollection.SyncRoot => this;
-
-    public object? GetValue(string key)
+    public object this[string key]
     {
-        var index = _keysData.IndexOf(key.ToUpper());
-        return index >= 0 ? _valuesData[index] : null;
+        get => _dictionary[key.ToUpper()];
+        set
+        {
+            key = key.ToUpper();
+            CheckKey(key);
+            CheckValue(key, value);
+            _dictionary[key] = value;
+        }
     }
+
+    KeyValuePair<string, object> IList<KeyValuePair<string, object>>.this[int index]
+    {
+        get => (_dictionary as IList<KeyValuePair<string, object>>)[index];
+        set
+        {
+            var key = value.Key.ToUpper();
+            CheckKey(key);
+            CheckValue(key, value.Value);
+            (_dictionary as IList<KeyValuePair<string, object>>)[index] = new KeyValuePair<string, object>(key, value.Value);
+        }
+    }
+
+    public bool TryGetValue(string key, [MaybeNullWhen(false)] out object value) => _dictionary.TryGetValue(key.ToUpper(), out value);
+
+    public bool ContainsKey(string key) => _dictionary.ContainsKey(key.ToUpper());
+
+    public bool ContainsValue(object value) => _dictionary.ContainsValue(value);
+
+    bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> item) => (_dictionary as ICollection<KeyValuePair<string, object>>).Contains(new KeyValuePair<string, object>(item.Key.ToUpper(), item.Value));
+
+    int IList<KeyValuePair<string, object>>.IndexOf(KeyValuePair<string, object> item) => (_dictionary as IList<KeyValuePair<string, object>>).IndexOf(new KeyValuePair<string, object>(item.Key.ToUpper(), item.Value));
+
+    public void Add(string key, object value)
+    {
+        key = key.ToUpper();
+        CheckKey(key);
+        CheckValue(key, value);
+        _dictionary.Add(key, value);
+    }
+
+    void ICollection<KeyValuePair<string, object>>.Add(KeyValuePair<string, object> item)
+    {
+        var key = item.Key.ToUpper();
+        CheckKey(key);
+        CheckValue(key, item.Value);
+        (_dictionary as ICollection<KeyValuePair<string, object>>).Add(new KeyValuePair<string, object>(key, item.Value));
+    }
+
+    void IList<KeyValuePair<string, object>>.Insert(int index, KeyValuePair<string, object> item)
+    {
+        var key = item.Key.ToUpper();
+        CheckKey(key);
+        CheckValue(key, item.Value);
+        (_dictionary as IList<KeyValuePair<string, object>>).Insert(index, new KeyValuePair<string, object>(key, item.Value));
+    }
+
+    public bool Remove(string key) => _dictionary.Remove(key.ToUpper());
+
+    bool ICollection<KeyValuePair<string, object>>.Remove(KeyValuePair<string, object> item) => (_dictionary as ICollection<KeyValuePair<string, object>>).Remove(new KeyValuePair<string, object>(item.Key.ToUpper(), item.Value));
+
+    void IList<KeyValuePair<string, object>>.RemoveAt(int index) => (_dictionary as IList<KeyValuePair<string, object>>).RemoveAt(index);
+
+    public void Clear() => _dictionary.Clear();
+
+    void ICollection<KeyValuePair<string, object>>.CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => (_dictionary as ICollection<KeyValuePair<string, object>>).CopyTo(array, arrayIndex);
+
+    public object? GetValue(string key) => TryGetValue(key, out var value) ? value : null;
 
     public string? GetStringValue(string key) => (string?)GetValue(key);
 
@@ -193,348 +243,15 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
 
     public void SetValue(string key, object? value)
     {
-        key = key.ToUpper();
-        CheckKey(key);
-        var index = _keysData.IndexOf(key);
-
         if (value is null)
         {
-            if (index >= 0)
-            {
-                _keysData.RemoveAt(index);
-                _valuesData.RemoveAt(index);
-            }
-            return;
-        }
-
-        CheckValue(key, value);
-        if (index >= 0)
-        {
-            _valuesData[index] = value;
+            Remove(key);
         }
         else
         {
-            _keysData.Add(key);
-            _valuesData.Add(value);
+            this[key] = value;
         }
     }
-
-    public string GetKeyAt(int index) => _keysData[index];
-
-    public object GetValueAt(int index) => _valuesData[index];
-
-    public KeyValuePair<string, object> GetAt(int index) => new(GetKeyAt(index), GetValueAt(index));
-
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out object value)
-    {
-        var index = _keysData.IndexOf(key.ToUpper());
-        if (index >= 0)
-        {
-            value = _valuesData[index];
-            return true;
-        }
-        value = null;
-        return false;
-    }
-
-    bool IReadOnlyDictionary<string, object>.TryGetValue(string key, [MaybeNullWhen(false)] out object value) => TryGetValue(key, out value);
-
-    public void SetAt(int index, object? value)
-    {
-        if (value is null)
-        {
-            _keysData.RemoveAt(index);
-            _valuesData.RemoveAt(index);
-            return;
-        }
-
-        var key = _keysData[index];
-        CheckValue(key, value);
-        _valuesData[index] = value;
-    }
-
-    public void SetAt(int index, string key, object value)
-    {
-        key = key.ToUpper();
-        if (_keysData.IndexOf(key) != index)
-        {
-            CheckKey(key);
-        }
-        CheckValue(key, value);
-        _keysData[index] = key;
-        _valuesData[index] = value;
-    }
-
-    public void SetAt(int index, KeyValuePair<string, object> pair) => SetAt(index, pair.Key, pair.Value);
-
-    public object this[string key]
-    {
-        get => GetValue(key) ?? throw CreateKeyNotFoundException(key);
-        set => SetValue(key, value);
-    }
-
-    object IReadOnlyDictionary<string, object>.this[string key] => GetValue(key) ?? throw CreateKeyNotFoundException(key);
-
-    object? IDictionary.this[object key]
-    {
-        get => key is string stringKey ? GetValue(stringKey) : null;
-        set
-        {
-            if (key is not string stringKey)
-            {
-                throw CreateKeyNotStringException(key);
-            }
-            SetValue(stringKey, value);
-        }
-    }
-
-    KeyValuePair<string, object> IList<KeyValuePair<string, object>>.this[int index]
-    {
-        get => GetAt(index);
-        set => SetAt(index, value);
-    }
-
-    KeyValuePair<string, object> IReadOnlyList<KeyValuePair<string, object>>.this[int index] => GetAt(index);
-
-    object? IList.this[int index]
-    {
-        get => GetAt(index);
-        set
-        {
-            switch (value)
-            {
-                case null:
-                    SetAt(index, null);
-                    break;
-                case KeyValuePair<string, object> pair:
-                    SetAt(index, pair);
-                    break;
-                default:
-                    throw CreateItemNotPairException(value);
-            }
-        }
-    }
-
-    public void Add(string key, object value)
-    {
-        key = key.ToUpper();
-        if (_keysData.Contains(key))
-        {
-            throw CreateKeyAlreadyExistsException(key);
-        }
-
-        CheckKey(key);
-        CheckValue(key, value);
-        _keysData.Add(key);
-        _valuesData.Add(value);
-    }
-
-    public void Add(KeyValuePair<string, object> pair) => Add(pair.Key, pair.Value);
-
-    void IDictionary.Add(object key, object? value)
-    {
-        if (value is null)
-        {
-            return;
-        }
-        if (key is not string stringKey)
-        {
-            throw CreateKeyNotStringException(key);
-        }
-        Add(stringKey, value);
-    }
-
-    int IList.Add(object? item)
-    {
-        switch (item)
-        {
-            case null:
-                return -1;
-            case KeyValuePair<string, object> pair:
-                Add(pair);
-                return Count - 1;
-            default:
-                throw CreateItemNotPairException(item);
-        }
-    }
-
-    public void Insert(int index, string key, object value)
-    {
-        key = key.ToUpper();
-        if (_keysData.Contains(key))
-        {
-            throw CreateKeyAlreadyExistsException(key);
-        }
-
-        CheckKey(key);
-        CheckValue(key, value);
-        _keysData.Insert(index, key);
-        _valuesData.Insert(index, value);
-    }
-
-    public void Insert(int index, KeyValuePair<string, object> pair) => Insert(index, pair.Key, pair.Value);
-
-    void IList.Insert(int index, object? item)
-    {
-        switch (item)
-        {
-            case null:
-                return;
-            case KeyValuePair<string, object> pair:
-                Insert(index, pair);
-                break;
-            default:
-                throw CreateItemNotPairException(item);
-        }
-    }
-
-    public bool Remove(string key)
-    {
-        var index = _keysData.IndexOf(key.ToUpper());
-        if (index < 0)
-        {
-            return false;
-        }
-        _keysData.RemoveAt(index);
-        _valuesData.RemoveAt(index);
-        return true;
-    }
-
-    public bool Remove(string key, object value)
-    {
-        var index = _keysData.IndexOf(key.ToUpper());
-        if (index < 0)
-        {
-            return false;
-        }
-        if (!Equals(_valuesData[index], value))
-        {
-            return false;
-        }
-        _keysData.RemoveAt(index);
-        _valuesData.RemoveAt(index);
-        return true;
-    }
-
-    public bool Remove(KeyValuePair<string, object> pair) => Remove(pair.Key, pair.Value);
-
-    void IDictionary.Remove(object key)
-    {
-        if (key is not string stringKey)
-        {
-            throw CreateKeyNotStringException(key);
-        }
-        Remove(stringKey);
-    }
-
-    void IList.Remove(object? item)
-    {
-        if (item is KeyValuePair<string, object> pair)
-        {
-            Remove(pair);
-        }
-    }
-
-    public void RemoveAt(int index)
-    {
-        _keysData.RemoveAt(index);
-        _valuesData.RemoveAt(index);
-    }
-
-    public void Clear()
-    {
-        _keysData.Clear();
-        _valuesData.Clear();
-    }
-
-    public bool ContainsKey(string key) => _keysData.Contains(key.ToUpper());
-
-    public bool ContainsValue(object value) => _valuesData.Contains(value);
-
-    public bool ContainsPair(string key, object value) => Equals(GetValue(key), value);
-
-    public bool ContainsPair(KeyValuePair<string, object> pair) => ContainsPair(pair.Key, pair.Value);
-
-    bool IReadOnlyDictionary<string, object>.ContainsKey(string key) => ContainsKey(key);
-
-    bool IDictionary.Contains(object key) => key is string stringKey && ContainsKey(stringKey);
-
-    bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> pair) => ContainsPair(pair);
-
-    bool IList.Contains(object? item) => item is KeyValuePair<string, object> pair && ContainsPair(pair);
-
-    public int IndexOfKey(string key) => _keysData.IndexOf(key.ToUpper());
-
-    public int IndexOfValue(object value) => _valuesData.IndexOf(value);
-
-    public int IndexOfPair(string key, object value)
-    {
-        var index = IndexOfKey(key);
-        return Equals(_valuesData[index], value) ? index : -1;
-    }
-
-    public int IndexOfPair(KeyValuePair<string, object> pair) => IndexOfPair(pair.Key, pair.Value);
-
-    int IList<KeyValuePair<string, object>>.IndexOf(KeyValuePair<string, object> pair) => IndexOfPair(pair);
-
-    int IList.IndexOf(object? item) => item is KeyValuePair<string, object> pair ? IndexOfPair(pair) : -1;
-
-    public void CopyTo(KeyValuePair<string, object>[] array, int index)
-    {
-        foreach (var pair in this)
-        {
-            array[index++] = pair;
-        }
-    }
-
-    void ICollection.CopyTo(Array array, int index)
-    {
-        if (array.Rank != 1)
-        {
-            throw new ArgumentException("Only single dimensional arrays are supported for the requested action.", nameof(array));
-        }
-        if (array.GetLowerBound(0) != 0)
-        {
-            throw new ArgumentException("The lower bound of target array must be zero.", nameof(array));
-        }
-        if (index < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index), $"Index ('{index}') must be a non-negative value.");
-        }
-        if (array.Length - index < Count)
-        {
-            throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
-        }
-        if (array is not KeyValuePair<string, object>[] pairArray)
-        {
-            throw new ArgumentException("Target array type is not compatible with the type of items in the collection.", nameof(array));
-        }
-        CopyTo(pairArray, index);
-    }
-
-    public KeyCollection Keys => _keys ??= new KeyCollection(this);
-
-    IEnumerable<string> IReadOnlyDictionary<string, object>.Keys => Keys;
-
-    ICollection<string> IDictionary<string, object>.Keys => Keys;
-
-    ICollection IDictionary.Keys => Keys;
-
-    public ValueCollection Values => _values ??= new ValueCollection(this);
-
-    IEnumerable<object> IReadOnlyDictionary<string, object>.Values => Values;
-
-    ICollection<object> IDictionary<string, object>.Values => Values;
-
-    ICollection IDictionary.Values => Values;
-
-    public Enumerator GetEnumerator() => new(this);
-
-    IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator() => GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    IDictionaryEnumerator IDictionary.GetEnumerator() => GetEnumerator();
 
     public string? Foundry
     {
@@ -706,183 +423,5 @@ public partial class BdfProperties : IDictionary<string, object>, IReadOnlyDicti
             }
             SetValue(key, value);
         }
-    }
-
-    public sealed class KeyCollection : IList<string>, IReadOnlyList<string>, IList
-    {
-        private readonly BdfProperties _properties;
-
-        internal KeyCollection(BdfProperties properties)
-        {
-            _properties = properties;
-        }
-
-        public int Count => _properties.Count;
-
-        bool ICollection<string>.IsReadOnly => true;
-
-        bool IList.IsReadOnly => true;
-
-        bool IList.IsFixedSize => false;
-
-        bool ICollection.IsSynchronized => false;
-
-        object ICollection.SyncRoot => (_properties as ICollection).SyncRoot;
-
-        string IList<string>.this[int index]
-        {
-            get => _properties.GetKeyAt(index);
-            set => throw new NotSupportedException();
-        }
-
-        object? IList.this[int index]
-        {
-            get => _properties.GetKeyAt(index);
-            set => throw new NotSupportedException();
-        }
-
-        string IReadOnlyList<string>.this[int index] => _properties.GetKeyAt(index);
-
-        public bool Contains(string key) => _properties.ContainsKey(key);
-
-        bool IList.Contains(object? key) => key is string stringKey && Contains(stringKey);
-
-        public int IndexOf(string key) => _properties.IndexOfKey(key);
-
-        int IList.IndexOf(object? key) => key is string stringKey ? IndexOf(stringKey) : -1;
-
-        public void CopyTo(string[] array, int index) => _properties._keysData.CopyTo(array, index);
-
-        void ICollection.CopyTo(Array array, int index) => (_properties._keysData as ICollection).CopyTo(array, index);
-
-        public IEnumerator<string> GetEnumerator() => _properties._keysData.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        void ICollection<string>.Add(string key) => throw new NotSupportedException();
-
-        int IList.Add(object? item) => throw new NotSupportedException();
-
-        void IList<string>.Insert(int index, string key) => throw new NotSupportedException();
-
-        void IList.Insert(int index, object? item) => throw new NotSupportedException();
-
-        bool ICollection<string>.Remove(string key) => throw new NotSupportedException();
-
-        void IList.Remove(object? item) => throw new NotSupportedException();
-
-        void IList<string>.RemoveAt(int index) => throw new NotSupportedException();
-
-        void IList.RemoveAt(int index) => throw new NotSupportedException();
-
-        void ICollection<string>.Clear() => throw new NotSupportedException();
-
-        void IList.Clear() => throw new NotSupportedException();
-    }
-
-    public sealed class ValueCollection : IList<object>, IReadOnlyList<object>, IList
-    {
-        private readonly BdfProperties _properties;
-
-        internal ValueCollection(BdfProperties properties)
-        {
-            _properties = properties;
-        }
-
-        public int Count => _properties.Count;
-
-        bool ICollection<Object>.IsReadOnly => true;
-
-        bool IList.IsReadOnly => true;
-
-        bool IList.IsFixedSize => false;
-
-        bool ICollection.IsSynchronized => false;
-
-        object ICollection.SyncRoot => (_properties as ICollection).SyncRoot;
-
-        object IList<object>.this[int index]
-        {
-            get => _properties.GetValueAt(index);
-            set => throw new NotSupportedException();
-        }
-
-        object? IList.this[int index]
-        {
-            get => _properties.GetValueAt(index);
-            set => throw new NotSupportedException();
-        }
-
-        object IReadOnlyList<object>.this[int index] => _properties.GetValueAt(index);
-
-        public bool Contains(object value) => _properties.ContainsValue(value);
-
-        bool IList.Contains(object? value) => value is not null && Contains(value);
-
-        public int IndexOf(object value) => _properties.IndexOfValue(value);
-
-        int IList.IndexOf(object? value) => value is not null ? IndexOf(value) : -1;
-
-        public void CopyTo(object[] array, int index) => _properties._valuesData.CopyTo(array, index);
-
-        void ICollection.CopyTo(Array array, int index) => (_properties._valuesData as ICollection).CopyTo(array, index);
-
-        public IEnumerator<object> GetEnumerator() => _properties._valuesData.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        void ICollection<object>.Add(object value) => throw new NotSupportedException();
-
-        int IList.Add(object? item) => throw new NotSupportedException();
-
-        void IList<object>.Insert(int index, object value) => throw new NotSupportedException();
-
-        void IList.Insert(int index, object? item) => throw new NotSupportedException();
-
-        bool ICollection<object>.Remove(object value) => throw new NotSupportedException();
-
-        void IList.Remove(object? item) => throw new NotSupportedException();
-
-        void IList<object>.RemoveAt(int index) => throw new NotSupportedException();
-
-        void IList.RemoveAt(int index) => throw new NotSupportedException();
-
-        void ICollection<object>.Clear() => throw new NotSupportedException();
-
-        void IList.Clear() => throw new NotSupportedException();
-    }
-
-    public readonly struct Enumerator : IEnumerator<KeyValuePair<string, object>>, IDictionaryEnumerator
-    {
-        private static IEnumerator<KeyValuePair<string, object>> CreateIEnumerator(BdfProperties properties)
-        {
-            foreach (var (key, value) in properties._keysData.Zip(properties._valuesData))
-            {
-                yield return new KeyValuePair<string, object>(key, value);
-            }
-        }
-
-        private readonly IEnumerator<KeyValuePair<string, object>> _enumerator;
-
-        internal Enumerator(BdfProperties properties)
-        {
-            _enumerator = CreateIEnumerator(properties);
-        }
-
-        public KeyValuePair<string, object> Current => _enumerator.Current;
-
-        object IEnumerator.Current => Current;
-
-        DictionaryEntry IDictionaryEnumerator.Entry => new(Current.Key, Current.Value);
-
-        object IDictionaryEnumerator.Key => Current.Key;
-
-        object IDictionaryEnumerator.Value => Current.Value;
-
-        public bool MoveNext() => _enumerator.MoveNext();
-
-        void IEnumerator.Reset() => _enumerator.Reset();
-
-        void IDisposable.Dispose() => _enumerator.Dispose();
     }
 }
