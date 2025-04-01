@@ -66,7 +66,7 @@ internal static partial class BdfUtils
     private static List<byte> HexStringToBitmapRow(string hexString, int bitmapWidth)
     {
         hexString = hexString.PadRight(hexString.Length + 1 - (hexString.Length + 1) % 2, '0');
-        List<byte> bitmapRow = [];
+        var bitmapRow = new List<byte>();
         foreach (var i in Enumerable.Range(0, hexString.Length / 2))
         {
             var chunk = hexString[(i * 2)..((i + 1) * 2)];
@@ -143,7 +143,7 @@ internal static partial class BdfUtils
 
     private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int bitmapWidth)
     {
-        List<List<byte>> bitmap = [];
+        var bitmap = new List<List<byte>>();
         while (lines.MoveNext())
         {
             var (word, _) = lines.Current;
@@ -605,9 +605,9 @@ internal static partial class BdfUtils
         {
             DumpWordStringLine(writer, WordComment, comment);
         }
-        foreach (var pair in font.Properties)
+        foreach (var (key, value) in font.Properties)
         {
-            DumpPropertiesLine(writer, pair.Key, pair.Value);
+            DumpPropertiesLine(writer, key, value);
         }
         DumpWordStringLine(writer, WordEndProperties);
 
@@ -695,9 +695,9 @@ internal static partial class BdfUtils
         {
             await DumpWordStringLineAsync(writer, WordComment, comment);
         }
-        foreach (var pair in font.Properties)
+        foreach (var (key, value) in font.Properties)
         {
-            await DumpPropertiesLineAsync(writer, pair.Key, pair.Value);
+            await DumpPropertiesLineAsync(writer, key, value);
         }
         await DumpWordStringLineAsync(writer, WordEndProperties);
 

@@ -147,9 +147,9 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
     {
         if (data is not null)
         {
-            foreach (var pair in data)
+            foreach (var (key, value) in data)
             {
-                this[pair.Key] = pair.Value;
+                this[key] = value;
             }
         }
         Comments = comments ?? [];
