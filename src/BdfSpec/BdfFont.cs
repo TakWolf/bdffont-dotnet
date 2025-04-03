@@ -26,12 +26,6 @@ public class BdfFont
         return await BdfUtils.ParseReaderAsync(reader);
     }
 
-    public static async Task<BdfFont> ParseAsync(string text)
-    {
-        using var reader = new StringReader(text);
-        return await ParseAsync(reader);
-    }
-
     public static async Task<BdfFont> LoadAsync(string path)
     {
         using var reader = new StreamReader(path);
@@ -125,13 +119,6 @@ public class BdfFont
     public async Task DumpAsync(TextWriter writer)
     {
         await BdfUtils.DumpWriterAsync(writer, this);
-    }
-
-    public async Task<string> DumpToStringAsync()
-    {
-        await using var writer = new StringWriter();
-        await DumpAsync(writer);
-        return writer.ToString();
     }
 
     public async Task SaveAsync(string path)
