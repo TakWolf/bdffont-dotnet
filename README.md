@@ -108,8 +108,9 @@ foreach (var glyph in font.Glyphs)
     Console.WriteLine($"advanceWidth: {glyph.DeviceWidthX}");
     Console.WriteLine($"dimensions: {glyph.Dimensions}");
     Console.WriteLine($"offset: {glyph.Offset}");
-    foreach (var text in glyph.Bitmap.Select(bitmapRow => string.Join("", bitmapRow).Replace("0", "  ").Replace("1", "██")))
+    foreach (var bitmapRow in glyph.Bitmap)
     {
+        var text = string.Join("", bitmapRow).Replace("0", "  ").Replace("1", "██");
         Console.WriteLine($"{text}*");
     }
     Console.WriteLine();
