@@ -31,16 +31,7 @@ internal static partial class BdfUtils
     [GeneratedRegex(@"(\r\n|\r|\n)")]
     private static partial Regex RegexNewLine();
 
-    private static int[] ConvertTailToInts(string tail)
-    {
-        var tokens = RegexBlanks().Split(tail);
-        var ints = new int[tokens.Length];
-        foreach (var i in Enumerable.Range(0, tokens.Length))
-        {
-            ints[i] = int.Parse(tokens[i]);
-        }
-        return ints;
-    }
+    private static List<int> ConvertTailToInts(string tail) => RegexBlanks().Split(tail).Select(int.Parse).ToList();
 
     private static object ConvertTailToPropertiesValue(string tail)
     {
@@ -67,9 +58,9 @@ internal static partial class BdfUtils
     {
         hexString = hexString.PadRight(hexString.Length + 1 - (hexString.Length + 1) % 2, '0');
         var bitmapRow = new List<byte>();
-        foreach (var i in Enumerable.Range(0, hexString.Length / 2))
+        for (var i = 0; i < hexString.Length; i += 2)
         {
-            var chunk = hexString[(i * 2)..((i + 1) * 2)];
+            var chunk = hexString[i..(i + 2)];
             bitmapRow.AddRange($"{Convert.ToByte(chunk, 16):b8}".Select(bit => byte.Parse(bit.ToString())));
         }
         if (bitmapRow.Count > bitmapWidth)
@@ -92,9 +83,9 @@ internal static partial class BdfUtils
             binaryString = binaryString[..bitmapWidth];
         }
         var hexString = new StringBuilder();
-        foreach (var i in Enumerable.Range(0, binaryString.Length / 8))
+        for (var i = 0; i < binaryString.Length; i += 8)
         {
-            var chunk = binaryString[(i * 8)..((i + 1) * 8)];
+            var chunk = binaryString[i..(i + 8)];
             hexString.Append($"{Convert.ToByte(chunk, 2):X2}");
         }
         return hexString.ToString().ToUpper();
