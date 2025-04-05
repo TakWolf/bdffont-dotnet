@@ -87,7 +87,7 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         KeySpacing,
         KeyAverageWidth,
         KeyCharsetRegistry,
-        KeyCharsetEncoding,
+        KeyCharsetEncoding
     ];
 
     [GeneratedRegex("^[a-zA-Z0-9_]*$")]
