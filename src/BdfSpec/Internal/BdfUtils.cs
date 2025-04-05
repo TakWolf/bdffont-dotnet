@@ -385,7 +385,7 @@ internal static partial class BdfUtils
                     var chunk = binaryString[i..(i + 8)];
                     hexString.Append($"{Convert.ToByte(chunk, 2):X2}");
                 }
-                writer.Write($"{hexString.ToString().ToUpper()}\n");
+                writer.Write($"{hexString}\n");
             }
 
             DumpWordStringLine(writer, WordEndChar);
