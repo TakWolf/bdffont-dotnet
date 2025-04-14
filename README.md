@@ -66,7 +66,7 @@ font.Properties.PointSize = font.PointSize * 10;
 font.Properties.ResolutionX = font.ResolutionX;
 font.Properties.ResolutionY = font.ResolutionY;
 font.Properties.Spacing = "P";
-font.Properties.AverageWidth = Convert.ToInt32(Math.Round(font.Glyphs.Sum(glyph => glyph.DeviceWidthX * 10) / Convert.ToDouble(font.Glyphs.Count)));
+font.Properties.AverageWidth = Convert.ToInt32(font.Glyphs.Average(glyph => glyph.DeviceWidthX * 10));
 font.Properties.CharsetRegistry = "ISO10646";
 font.Properties.CharsetEncoding = "1";
 font.GenerateNameAsXlfd();
