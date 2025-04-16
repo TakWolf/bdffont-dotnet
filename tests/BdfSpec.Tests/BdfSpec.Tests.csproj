@@ -22,5 +22,5 @@
     <ItemGroup>
         <Content Include="..\..\assets\**" LinkBase="assets" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
-    
+
 </Project>
