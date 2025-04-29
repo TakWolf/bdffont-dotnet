@@ -2,7 +2,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using BdfSpec.Error;
-using BdfSpec.Internal;
+using BdfSpec.Util;
 
 namespace BdfSpec;
 

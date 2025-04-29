@@ -1,4 +1,4 @@
-using BdfSpec.Internal;
+using BdfSpec.Util;
 
 namespace BdfSpec;
 

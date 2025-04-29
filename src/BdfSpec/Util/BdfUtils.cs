@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using BdfSpec.Error;
 
-namespace BdfSpec.Internal;
+namespace BdfSpec.Util;
 
 internal static partial class BdfUtils
 {
