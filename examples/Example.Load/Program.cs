@@ -7,7 +7,7 @@ if (Directory.Exists(outputsDir))
 }
 Directory.CreateDirectory(outputsDir);
 
-var font = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.02.bdf"));
+var font = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.03.bdf"));
 Console.WriteLine($"name: {font.Name}");
 Console.WriteLine($"size: {font.PointSize}");
 Console.WriteLine($"ascent: {font.Properties.FontAscent}");
@@ -27,4 +27,4 @@ foreach (var glyph in font.Glyphs)
     }
     Console.WriteLine();
 }
-font.Save(Path.Combine(outputsDir, "unifont-16.0.02.bdf"));
+font.Save(Path.Combine(outputsDir, "unifont-16.0.03.bdf"));
