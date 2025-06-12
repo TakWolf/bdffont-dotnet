@@ -180,7 +180,15 @@ public class PropertiesTests
         Assert.Equal(8, properties.CapHeight);
         Assert.Equal(8, properties["CAP_HEIGHT"]);
 
-        Assert.Equal(5, properties.Count);
+        properties.UnderlinePosition = -2;
+        Assert.Equal(-2, properties.UnderlinePosition);
+        Assert.Equal(-2, properties["UNDERLINE_POSITION"]);
+
+        properties.UnderlineThickness = 1;
+        Assert.Equal(1, properties.UnderlineThickness);
+        Assert.Equal(1, properties["UNDERLINE_THICKNESS"]);
+
+        Assert.Equal(7, properties.Count);
     }
 
     [Fact]

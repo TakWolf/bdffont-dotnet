@@ -26,8 +26,10 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
     private const string KeyDefaultChar = "DEFAULT_CHAR";
     private const string KeyFontAscent = "FONT_ASCENT";
     private const string KeyFontDescent = "FONT_DESCENT";
-    private const string KeyCapHeight = "CAP_HEIGHT";
     private const string KeyXHeight = "X_HEIGHT";
+    private const string KeyCapHeight = "CAP_HEIGHT";
+    private const string KeyUnderlinePosition = "UNDERLINE_POSITION";
+    private const string KeyUnderlineThickness = "UNDERLINE_THICKNESS";
 
     private const string KeyFontVersion = "FONT_VERSION";
     private const string KeyCopyright = "COPYRIGHT";
@@ -57,8 +59,10 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         KeyDefaultChar,
         KeyFontAscent,
         KeyFontDescent,
+        KeyXHeight,
         KeyCapHeight,
-        KeyXHeight
+        KeyUnderlinePosition,
+        KeyUnderlineThickness
     ];
 
     private static readonly string[] XlfdStringValueKeys = [
@@ -365,6 +369,18 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
     {
         get => GetIntValue(KeyCapHeight);
         set => SetValue(KeyCapHeight, value);
+    }
+
+    public int? UnderlinePosition
+    {
+        get => GetIntValue(KeyUnderlinePosition);
+        set => SetValue(KeyUnderlinePosition, value);
+    }
+
+    public int? UnderlineThickness
+    {
+        get => GetIntValue(KeyUnderlineThickness);
+        set => SetValue(KeyUnderlineThickness, value);
     }
 
     public string? FontVersion

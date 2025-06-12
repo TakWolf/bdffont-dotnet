@@ -76,6 +76,8 @@ font.Properties.FontAscent = 14;
 font.Properties.FontDescent = 2;
 font.Properties.XHeight = 7;
 font.Properties.CapHeight = 10;
+font.Properties.UnderlinePosition = -2;
+font.Properties.UnderlineThickness = 1;
 
 font.Properties.FontVersion = "1.0.0";
 font.Properties.Copyright = "Copyright (c) TakWolf";
