@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="src/BdfSpec/BdfSpec.csproj" />
+    <Project Path="tests/BdfSpec.Tests/BdfSpec.Tests.csproj" />
+    <Project Path="examples/Example.Create/Example.Create.csproj" />
+    <Project Path="examples/Example.Load/Example.Load.csproj" />
+</Solution>
