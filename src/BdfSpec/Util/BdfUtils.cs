@@ -88,7 +88,15 @@ internal static partial class BdfUtils
                     properties.Comments.Add(tail);
                     break;
                 default:
-                    properties[word] = ConvertTailToPropertiesValue(tail);
+                    var value = ConvertTailToPropertiesValue(tail);
+                    try
+                    {
+                        properties[word] = value;
+                    }
+                    catch (BdfValueException)
+                    {
+                        properties[word] = value.ToString()!;
+                    }
                     break;
             }
         }
