@@ -265,13 +265,4 @@ public class PropertiesTests
         var e = Assert.Throws<BdfValueException>(() => properties.SetValue("FLOAT_PARAM", 1.2));
         Assert.Equal("Expected type 'string' or 'int', got 'System.Double' instead.", e.Message);
     }
-
-    [Fact]
-    public void TestProperties15()
-    {
-        var properties = new BdfProperties();
-
-        var e = Assert.Throws<BdfValueException>(() => properties.FamilyName = "Demo-Pixel");
-        Assert.Equal("Contains illegal characters.", e.Message);
-    }
 }

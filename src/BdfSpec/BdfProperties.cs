@@ -131,13 +131,13 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
                 throw new BdfValueException($"Expected type 'string' or 'int', got '{value.GetType()}' instead.");
             }
         }
+    }
 
-        if (XlfdStringValueKeys.Contains(key))
+    private static void CheckXlfdStringValue(string key, string value)
+    {
+        if (RegexXlfdValue().IsMatch(value))
         {
-            if (RegexXlfdValue().IsMatch((string)value))
-            {
-                throw new BdfValueException("Contains illegal characters.");
-            }
+            throw new BdfValueException($"Value of '{key}' Contains illegal characters.");
         }
     }
 
@@ -404,7 +404,15 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
     public string ToXlfd()
     {
         List<string> tokens = [""];
-        tokens.AddRange(XlfdKeysOrder.Select(key => GetValue(key)?.ToString() ?? ""));
+        foreach (var key in XlfdKeysOrder)
+        {
+            var value = GetValue(key)?.ToString() ?? "";
+            if (XlfdStringValueKeys.Contains(key))
+            {
+                CheckXlfdStringValue(key, value);
+            }
+            tokens.Add(value);
+        }
         return string.Join("-", tokens);
     }
 
@@ -430,6 +438,7 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
             {
                 if (XlfdStringValueKeys.Contains(key))
                 {
+                    CheckXlfdStringValue(key, token);
                     value = token;
                 }
                 else
