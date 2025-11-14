@@ -414,7 +414,7 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         {
             throw new BdfXlfdException("Not starts with '-'.");
         }
-        var tokens = fontName[1..fontName.Length].Split('-');
+        var tokens = fontName[1..].Split('-');
         if (tokens.Length != 14)
         {
             throw new BdfXlfdException("Must be 14 '-'.");
