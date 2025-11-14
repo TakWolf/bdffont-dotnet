@@ -25,6 +25,8 @@ internal static partial class BdfUtils
     private const string WordBbx = "BBX";
     private const string WordBitmap = "BITMAP";
 
+    private const string CommentLinePrefix = $"{WordComment} ";
+
     [GeneratedRegex(@"\s+")]
     private static partial Regex RegexBlanks();
 
@@ -40,9 +42,20 @@ internal static partial class BdfUtils
             {
                 continue;
             }
-            var tokens = RegexBlanks().Split(line, 2);
-            var word = tokens[0];
-            var tail = tokens.Length >= 2 ? tokens[1] : "";
+
+            string word;
+            string tail;
+            if (line.StartsWith(CommentLinePrefix))
+            {
+                word = WordComment;
+                tail = line[CommentLinePrefix.Length..];
+            }
+            else
+            {
+                var tokens = RegexBlanks().Split(line, 2);
+                word = tokens[0];
+                tail = tokens.Length >= 2 ? tokens[1] : "";
+            }
             yield return (word, tail);
         }
     }
