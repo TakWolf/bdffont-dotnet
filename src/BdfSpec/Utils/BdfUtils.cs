@@ -1,8 +1,8 @@
 using System.Text;
 using System.Text.RegularExpressions;
-using BdfSpec.Error;
+using BdfSpec.Errors;
 
-namespace BdfSpec.Util;
+namespace BdfSpec.Utils;
 
 internal static partial class BdfUtils
 {

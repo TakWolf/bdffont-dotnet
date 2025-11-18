@@ -1,4 +1,4 @@
-namespace BdfSpec.Error;
+namespace BdfSpec.Errors;
 
 public class BdfXlfdException : BdfException
 {

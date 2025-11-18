@@ -1,4 +1,4 @@
-using BdfSpec.Error;
+using BdfSpec.Errors;
 
 namespace BdfSpec.Tests;
 

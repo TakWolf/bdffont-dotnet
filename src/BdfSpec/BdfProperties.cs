@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using BdfSpec.Error;
-using BdfSpec.Util;
+using BdfSpec.Errors;
+using BdfSpec.Utils;
 
 namespace BdfSpec;
 
