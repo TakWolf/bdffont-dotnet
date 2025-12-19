@@ -8,6 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\BdfSpec\BdfSpec.csproj" />
+        <ProjectReference Include="../../src/BdfSpec/BdfSpec.csproj" />
     </ItemGroup>
 </Project>
