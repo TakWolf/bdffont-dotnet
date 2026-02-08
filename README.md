@@ -1,7 +1,7 @@
 # BdfFont.NET
 
-[![.NET](https://img.shields.io/badge/dotnet-8.0-mediumpurple)](https://dotnet.microsoft.com)
-[![NuGet](https://img.shields.io/nuget/v/BdfFont)](https://www.nuget.org/packages/BdfFont)
+[![.NET](https://img.shields.io/badge/dotnet-8.0-mediumpurple?style=flat-square)](https://dotnet.microsoft.com)
+[![NuGet](https://img.shields.io/nuget/v/BdfFont?style=flat-square)](https://www.nuget.org/packages/BdfFont)
 
 BdfFont is a library for manipulating [Glyph Bitmap Distribution Format (BDF) Fonts](https://en.wikipedia.org/wiki/Glyph_Bitmap_Distribution_Format).
 
