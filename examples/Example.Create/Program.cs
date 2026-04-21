@@ -13,7 +13,32 @@ var font = new BdfFont(
     boundingBox: (16, 16, 0, -2));
 
 font.Glyphs.Add(new BdfGlyph(
-    name: "A",
+    name: ".notdef",
+    encoding: -1,
+    scalableWidth: (500, 0),
+    deviceWidth: (8, 0),
+    boundingBox: (8, 16, 0, -2),
+    bitmap: [
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1]
+    ]));
+
+font.Glyphs.Add(new BdfGlyph(
+    name: "CAP_LETTER_A",
     encoding: 65,
     scalableWidth: (500, 0),
     deviceWidth: (8, 0),
