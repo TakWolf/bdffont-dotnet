@@ -52,9 +52,9 @@ internal static partial class BdfUtils
             }
             else
             {
-                var tokens = RegexBlanks().Split(line, 2);
-                word = tokens[0];
-                tail = tokens.Length >= 2 ? tokens[1] : "";
+                var parts = RegexBlanks().Split(line, 2);
+                word = parts[0];
+                tail = parts.Length >= 2 ? parts[1] : "";
             }
             yield return (word, tail);
         }

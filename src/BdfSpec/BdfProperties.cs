@@ -403,7 +403,7 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
 
     public string ToXlfd()
     {
-        List<string> tokens = [""];
+        List<string> parts = [""];
         foreach (var key in XlfdKeysOrder)
         {
             var value = GetValue(key)?.ToString() ?? "";
@@ -411,9 +411,9 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
             {
                 CheckXlfdStringValue(key, value);
             }
-            tokens.Add(value);
+            parts.Add(value);
         }
-        return string.Join("-", tokens);
+        return string.Join("-", parts);
     }
 
     public void UpdateByXlfd(string fontName)
@@ -422,15 +422,15 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         {
             throw new BdfXlfdException("Not starts with '-'.");
         }
-        var tokens = fontName[1..].Split('-');
-        if (tokens.Length != 14)
+        var parts = fontName[1..].Split('-');
+        if (parts.Length != 14)
         {
             throw new BdfXlfdException("Must be 14 '-'.");
         }
-        foreach (var (key, token) in XlfdKeysOrder.Zip(tokens))
+        foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
         {
             object? value;
-            if ("".Equals(token))
+            if ("".Equals(part))
             {
                 value = null;
             }
@@ -438,12 +438,12 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
             {
                 if (XlfdStringValueKeys.Contains(key))
                 {
-                    CheckXlfdStringValue(key, token);
-                    value = token;
+                    CheckXlfdStringValue(key, part);
+                    value = part;
                 }
                 else
                 {
-                    value = Convert.ToInt32(token);
+                    value = Convert.ToInt32(part);
                 }
             }
             SetValue(key, value);
