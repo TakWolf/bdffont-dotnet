@@ -113,4 +113,122 @@ public class ParseDumpTests
         var e = Assert.Throws<BdfDumpException>(() => font.DumpToString());
         Assert.Equal("Tail cannot be multi-line string.", e.Message);
     }
+
+    [Fact]
+    public void TestParseBitmap1()
+    {
+        var font = BdfFont.Parse(
+            """
+            STARTFONT 2.1
+            FONT
+            SIZE 0 0 0
+            FONTBOUNDINGBOX 0 0 0 0
+            STARTPROPERTIES 0
+            ENDPROPERTIES
+            CHARS 1
+            STARTCHAR _
+            ENCODING 0
+            SWIDTH 0 0
+            DWIDTH 0 0
+            BBX 10 1 0 0
+            BITMAP
+            FF
+            ENDCHAR
+            ENDFONT
+            """);
+        Assert.Equal([
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+        ], font.Glyphs[0].Bitmap);
+    }
+
+    [Fact]
+    public void TestParseBitmap2()
+    {
+        var font = BdfFont.Parse(
+            """
+            STARTFONT 2.1
+            FONT
+            SIZE 0 0 0
+            FONTBOUNDINGBOX 0 0 0 0
+            STARTPROPERTIES 0
+            ENDPROPERTIES
+            CHARS 1
+            STARTCHAR _
+            ENCODING 0
+            SWIDTH 0 0
+            DWIDTH 0 0
+            BBX 6 1 0 0
+            BITMAP
+            FF
+            ENDCHAR
+            ENDFONT
+            """);
+        Assert.Equal([
+            [1, 1, 1, 1, 1, 1]
+        ], font.Glyphs[0].Bitmap);
+    }
+
+    [Fact]
+    public void TestDumpBitmap1()
+    {
+        var font = new BdfFont();
+        font.Glyphs.Add(new BdfGlyph(
+            name: "_",
+            encoding: 0,
+            boundingBox: (10, 1, 0, 0),
+            bitmap: [
+                [2, 2, 2, 2, 2, 2]
+            ]));
+        Assert.Equal(
+            """
+            STARTFONT 2.1
+            FONT
+            SIZE 0 0 0
+            FONTBOUNDINGBOX 0 0 0 0
+            STARTPROPERTIES 0
+            ENDPROPERTIES
+            CHARS 1
+            STARTCHAR _
+            ENCODING 0
+            SWIDTH 0 0
+            DWIDTH 0 0
+            BBX 10 1 0 0
+            BITMAP
+            FC00
+            ENDCHAR
+            ENDFONT
+            """.Replace("\r\n", "\n"), font.DumpToString().TrimEnd());
+    }
+
+    [Fact]
+    public void TestDumpBitmap2()
+    {
+        var font = new BdfFont();
+        font.Glyphs.Add(new BdfGlyph(
+            name: "_",
+            encoding: 0,
+            boundingBox: (6, 1, 0, 0),
+            bitmap: [
+                [2, 2, 2, 2, 2, 2, 2, 2]
+            ]));
+        Assert.Equal(
+            """
+            STARTFONT 2.1
+            FONT
+            SIZE 0 0 0
+            FONTBOUNDINGBOX 0 0 0 0
+            STARTPROPERTIES 0
+            ENDPROPERTIES
+            CHARS 1
+            STARTCHAR _
+            ENCODING 0
+            SWIDTH 0 0
+            DWIDTH 0 0
+            BBX 6 1 0 0
+            BITMAP
+            FC
+            ENDCHAR
+            ENDFONT
+            """.Replace("\r\n", "\n"), font.DumpToString().TrimEnd());
+    }
 }

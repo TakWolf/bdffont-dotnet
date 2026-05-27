@@ -1,4 +1,4 @@
-using System.Text;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using BdfSpec.Errors;
 
@@ -118,7 +118,7 @@ internal static partial class BdfUtils
         throw BdfMissingWordException.Create(WordEndProperties);
     }
 
-    private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int bitmapWidth)
+    private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int glyphWidth)
     {
         var bitmap = new List<List<byte>>();
         while (lines.MoveNext())
@@ -129,16 +129,15 @@ internal static partial class BdfUtils
                 case WordEndChar:
                     return bitmap;
                 default:
-                    var hexString = word.PadRight(word.Length + 1 - (word.Length + 1) % 2, '0');
-                    var bitmapRow = new List<byte>();
-                    for (var i = 0; i < hexString.Length; i += 2)
+                    var bitmapRow = new List<byte>(glyphWidth);
+                    for (var i = 0; i < glyphWidth; i += 4)
                     {
-                        var chunk = hexString[i..(i + 2)];
-                        bitmapRow.AddRange($"{Convert.ToByte(chunk, 16):b8}".Select(bit => byte.Parse(bit.ToString())));
-                    }
-                    if (bitmapRow.Count > bitmapWidth)
-                    {
-                        bitmapRow = bitmapRow[..bitmapWidth];
+                        var start = i / 4;
+                        var b = start < word.Length ? byte.Parse(word.AsSpan(start, 1), NumberStyles.HexNumber) : 0;
+                        for (var shift = 0; shift < 4 && i + shift < glyphWidth; shift++)
+                        {
+                            bitmapRow.Add((byte)((b >> (3 - shift)) & 1));
+                        }
                     }
                     bitmap.Add(bitmapRow);
                     break;
@@ -390,25 +389,21 @@ internal static partial class BdfUtils
             DumpWordIntsLine(writer, WordBbx, glyph.Width, glyph.Height, glyph.OffsetX, glyph.OffsetY);
             DumpWordStringLine(writer, WordBitmap);
 
-            var bitmapWidth = glyph.Width + 7 - (glyph.Width + 7) % 8;
+            var bitmapWidth = (glyph.Width + 7) / 8 * 8;
             foreach (var bitmapRow in glyph.Bitmap)
             {
-                var binaryString = string.Join("", bitmapRow);
-                if (binaryString.Length < bitmapWidth)
+                for (var i = 0; i < bitmapWidth; i += 8)
                 {
-                    binaryString = binaryString.PadRight(bitmapWidth, '0');
+                    byte b = 0;
+                    for (var shift = 0; shift < 8; shift++)
+                    {
+                        var pixelIndex = i + shift;
+                        var pixel = pixelIndex < Math.Min(bitmapRow.Count, glyph.Width) && bitmapRow[pixelIndex] != 0 ? 1 : 0;
+                        b = (byte)((b << 1) | pixel);
+                    }
+                    writer.Write($"{b:X2}");
                 }
-                else if (binaryString.Length > bitmapWidth)
-                {
-                    binaryString = binaryString[..bitmapWidth];
-                }
-                var hexString = new StringBuilder();
-                for (var i = 0; i < binaryString.Length; i += 8)
-                {
-                    var chunk = binaryString[i..(i + 8)];
-                    hexString.Append($"{Convert.ToByte(chunk, 2):X2}");
-                }
-                writer.Write($"{hexString}\n");
+                writer.Write('\n');
             }
 
             DumpWordStringLine(writer, WordEndChar);

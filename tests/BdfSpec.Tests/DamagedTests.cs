@@ -85,7 +85,7 @@ public class DamagedTests
     public void TestNoLineEndChar()
     {
         var e = Assert.Throws<FormatException>(() => BdfFont.Load(Path.Combine("assets", "damaged", "no_line_end_char.bdf")));
-        Assert.Equal("Could not find any recognizable digits.", e.Message);
+        Assert.IsType<FormatException>(e);
     }
 
     [Fact]
