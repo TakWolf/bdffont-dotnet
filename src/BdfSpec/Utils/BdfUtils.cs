@@ -63,23 +63,17 @@ internal static partial class BdfUtils
 
     private static object ConvertTailToPropertiesValue(string tail)
     {
-        object value;
         if (tail.StartsWith('"') && tail.EndsWith('"'))
         {
-            value = tail[1..^1].Replace("\"\"", "\"");
+            return tail[1..^1].Replace("\"\"", "\"");
         }
-        else
+
+        if (int.TryParse(tail, out var value))
         {
-            try
-            {
-                value = int.Parse(tail);
-            }
-            catch (Exception)
-            {
-                value = tail;
-            }
+            return value;
         }
-        return value;
+
+        return tail;
     }
 
     private static BdfProperties ParsePropertiesSegment(IEnumerator<(string, string)> lines, int count)
