@@ -158,7 +158,7 @@ internal static partial class BdfUtils
             switch (word)
             {
                 case WordEncoding:
-                    encoding = Convert.ToInt32(tail);
+                    encoding = int.Parse(tail);
                     break;
                 case WordSWidth:
                     var scalableWidthValues = ConvertTailToInts(tail);
@@ -241,10 +241,10 @@ internal static partial class BdfUtils
                     boundingBox = (boundingBoxValues[0], boundingBoxValues[1], boundingBoxValues[2], boundingBoxValues[3]);
                     break;
                 case WordStartProperties:
-                    properties = ParsePropertiesSegment(lines, Convert.ToInt32(tail));
+                    properties = ParsePropertiesSegment(lines, int.Parse(tail));
                     break;
                 case WordChars:
-                    glyphsCount = Convert.ToInt32(tail);
+                    glyphsCount = int.Parse(tail);
                     break;
                 case WordStartChar:
                     glyphs.Add(ParseGlyphSegment(lines, tail));
