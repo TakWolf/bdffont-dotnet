@@ -59,7 +59,16 @@ internal static partial class BdfUtils
         }
     }
 
-    private static List<int> ConvertTailToInts(string tail) => RegexBlanks().Split(tail).Select(int.Parse).ToList();
+    private static List<int> ConvertTailToInts(string tail)
+    {
+        var parts = RegexBlanks().Split(tail);
+        var values = new List<int>(parts.Length);
+        foreach (var part in parts)
+        {
+            values.Add(int.Parse(part));
+        }
+        return values;
+    }
 
     private static object ConvertTailToPropertiesValue(string tail)
     {
