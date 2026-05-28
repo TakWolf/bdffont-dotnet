@@ -27,11 +27,10 @@ internal static partial class BdfUtils
 
     private const string CommentLinePrefix = $"{WordComment} ";
 
+    private static readonly char[] NewLineChars = ['\n', '\r'];
+
     [GeneratedRegex(@"\s+")]
     private static partial Regex RegexBlanks();
-
-    [GeneratedRegex(@"(\r\n|\r|\n)")]
-    private static partial Regex RegexNewLine();
 
     private static IEnumerator<(string, string)> CreateLinesEnumerator(TextReader reader)
     {
@@ -317,7 +316,7 @@ internal static partial class BdfUtils
             tail = tail.Trim();
             if (!"".Equals(tail))
             {
-                if (RegexNewLine().IsMatch(tail))
+                if (tail.IndexOfAny(NewLineChars) >= 0)
                 {
                     throw new BdfDumpException("Tail cannot be multi-line string.");
                 }
@@ -343,7 +342,7 @@ internal static partial class BdfUtils
         {
             stringValue = stringValue.Replace("\"", "\"\"");
             stringValue = $"\"{stringValue}\"";
-            if (RegexNewLine().IsMatch(stringValue))
+            if (stringValue.IndexOfAny(NewLineChars) >= 0)
             {
                 throw new BdfDumpException("Properties value cannot be multi-line string.");
             }
