@@ -322,7 +322,8 @@ internal static partial class BdfUtils
                 {
                     throw new BdfDumpException("Tail cannot be multi-line string.");
                 }
-                writer.Write($" {tail}");
+                writer.Write(' ');
+                writer.Write(tail);
             }
         }
         writer.Write('\n');
@@ -342,15 +343,18 @@ internal static partial class BdfUtils
     {
         if (value is string stringValue)
         {
-            stringValue = stringValue.Replace("\"", "\"\"");
-            stringValue = $"\"{stringValue}\"";
             if (stringValue.IndexOfAny(NewLineChars) >= 0)
             {
                 throw new BdfDumpException("Properties value cannot be multi-line string.");
             }
+            stringValue = stringValue.Replace("\"", "\"\"");
+            stringValue = $"\"{stringValue}\"";
             value = stringValue;
         }
-        writer.Write($"{key} {value}\n");
+        writer.Write(key);
+        writer.Write(' ');
+        writer.Write(value);
+        writer.Write('\n');
     }
 
     public static void DumpWriter(TextWriter writer, BdfFont font)
