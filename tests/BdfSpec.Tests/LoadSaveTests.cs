@@ -6,7 +6,7 @@ public class LoadSaveTests
     public void TestUnifont()
     {
         var loadPath = Path.Combine("assets", "unifont", "unifont-17.0.04.bdf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "unifont-17.0.04.bdf");
+        var savePath = Path.Combine(PathUtil.CreateTempDir(), "unifont-17.0.04.bdf");
         var font = BdfFont.Load(loadPath);
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath).Replace("\nBITMAP\n", "\nBITMAP \n"));
@@ -16,7 +16,7 @@ public class LoadSaveTests
     public void TestMisakiGothic()
     {
         var loadPath = Path.Combine("assets", "misaki", "misaki_gothic.bdf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "misaki_gothic.bdf");
+        var savePath = Path.Combine(PathUtil.CreateTempDir(), "misaki_gothic.bdf");
         var font = BdfFont.Load(loadPath);
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath));
@@ -26,7 +26,7 @@ public class LoadSaveTests
     public void TestMisakiGothic2()
     {
         var loadPath = Path.Combine("assets", "misaki", "misaki_gothic_2nd.bdf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "misaki_gothic_2nd.bdf");
+        var savePath = Path.Combine(PathUtil.CreateTempDir(), "misaki_gothic_2nd.bdf");
         var font = BdfFont.Load(loadPath);
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath));
@@ -36,7 +36,7 @@ public class LoadSaveTests
     public void TestMisakiMincho()
     {
         var loadPath = Path.Combine("assets", "misaki", "misaki_mincho.bdf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "misaki_mincho.bdf");
+        var savePath = Path.Combine(PathUtil.CreateTempDir(), "misaki_mincho.bdf");
         var font = BdfFont.Load(loadPath);
         font.Save(savePath);
         Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath));

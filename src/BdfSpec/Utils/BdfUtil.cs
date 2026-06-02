@@ -4,7 +4,7 @@ using BdfSpec.Errors;
 
 namespace BdfSpec.Utils;
 
-internal static partial class BdfUtils
+internal static partial class BdfUtil
 {
     private const string SpecVersion = "2.1";
 

@@ -6,7 +6,7 @@ public class BdfFont
 {
     public static BdfFont Parse(TextReader reader)
     {
-        return BdfUtils.ParseReader(reader);
+        return BdfUtil.ParseReader(reader);
     }
 
     public static BdfFont Parse(string text)
@@ -89,7 +89,7 @@ public class BdfFont
 
     public void Dump(TextWriter writer)
     {
-        BdfUtils.DumpWriter(writer, this);
+        BdfUtil.DumpWriter(writer, this);
     }
 
     public string DumpToString()
