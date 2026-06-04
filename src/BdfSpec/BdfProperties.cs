@@ -135,9 +135,10 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
 
     private static void CheckXlfdStringValue(string key, string value)
     {
-        if (RegexXlfdValue().IsMatch(value))
+        var match = RegexXlfdValue().Match(value);
+        if (match.Success)
         {
-            throw new BdfValueException($"Value of '{key}' Contains illegal characters.");
+            throw new BdfValueException($"Value of '{key}' contains illegal characters '{match.Value}'.");
         }
     }
 
