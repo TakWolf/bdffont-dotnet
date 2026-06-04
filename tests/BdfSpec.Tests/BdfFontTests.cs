@@ -2,7 +2,7 @@ using BdfSpec.Errors;
 
 namespace BdfSpec.Tests;
 
-public class FontTests
+public class BdfFontTests
 {
     [Fact]
     public void TestFont1()

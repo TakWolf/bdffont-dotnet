@@ -1,6 +1,6 @@
 using BdfSpec.Errors;
 
-namespace BdfSpec.Tests;
+namespace BdfSpec.Tests.Conformance;
 
 public class ParseDumpTests
 {

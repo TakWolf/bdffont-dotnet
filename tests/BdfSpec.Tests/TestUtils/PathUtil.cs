@@ -1,4 +1,4 @@
-namespace BdfSpec.Tests;
+namespace BdfSpec.Tests.TestUtils;
 
 internal static class PathUtil
 {

@@ -1,6 +1,6 @@
 namespace BdfSpec.Tests;
 
-public class GlyphTests
+public class BdfGlyphTests
 {
     [Fact]
     public void TestGlyph()

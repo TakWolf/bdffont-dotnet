@@ -2,7 +2,7 @@ using BdfSpec.Errors;
 
 namespace BdfSpec.Tests;
 
-public class PropertiesTests
+public class BdfPropertiesTests
 {
     [Fact]
     public void TestProperties1()

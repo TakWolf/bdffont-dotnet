@@ -1,4 +1,6 @@
-namespace BdfSpec.Tests;
+using BdfSpec.Tests.TestUtils;
+
+namespace BdfSpec.Tests.Conformance;
 
 public class LoadSaveTests
 {
