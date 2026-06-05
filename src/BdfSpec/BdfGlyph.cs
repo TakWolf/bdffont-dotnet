@@ -2,18 +2,18 @@ namespace BdfSpec;
 
 public class BdfGlyph
 {
-    public string Name;
-    public int Encoding;
-    public int ScalableWidthX;
-    public int ScalableWidthY;
-    public int DeviceWidthX;
-    public int DeviceWidthY;
-    public int Width;
-    public int Height;
-    public int OffsetX;
-    public int OffsetY;
-    public List<List<byte>> Bitmap;
-    public List<string> Comments;
+    public string Name { get; set; }
+    public int Encoding { get; set; }
+    public int ScalableWidthX { get; set; }
+    public int ScalableWidthY { get; set; }
+    public int DeviceWidthX { get; set; }
+    public int DeviceWidthY { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public int OffsetX { get; set; }
+    public int OffsetY { get; set; }
+    public List<List<byte>> Bitmap { get; set; }
+    public List<string> Comments { get; set; }
 
     public BdfGlyph(
         string name,

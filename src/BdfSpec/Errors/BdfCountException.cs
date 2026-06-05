@@ -8,9 +8,9 @@ public class BdfCountException : BdfParseException
         return new BdfCountException(message, word, expected, actual);
     }
 
-    public readonly string Word;
-    public readonly int Expected;
-    public readonly int Actual;
+    public string Word { get; }
+    public int Expected { get; }
+    public int Actual { get; }
 
     private BdfCountException(string message, string word, int expected, int actual) : base(message)
     {

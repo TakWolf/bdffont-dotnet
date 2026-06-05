@@ -130,7 +130,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
 
     private readonly OrderedDictionary<string, BdfPropertyValue> _dictionary = new();
 
-    public List<string> Comments;
+    public List<string> Comments { get; set; }
 
     public BdfProperties(
         IDictionary<string, BdfPropertyValue>? data = null,

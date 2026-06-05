@@ -8,7 +8,7 @@ public class BdfMissingWordException : BdfParseException
         return new BdfMissingWordException(message, word);
     }
 
-    public readonly string Word;
+    public string Word { get; }
 
     private BdfMissingWordException(string message, string word) : base(message)
     {

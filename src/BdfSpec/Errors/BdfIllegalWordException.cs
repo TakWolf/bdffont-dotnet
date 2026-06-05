@@ -8,7 +8,7 @@ public class BdfIllegalWordException : BdfParseException
         return new BdfIllegalWordException(message, word);
     }
 
-    public readonly string Word;
+    public string Word { get; }
 
     private BdfIllegalWordException(string message, string word) : base(message)
     {

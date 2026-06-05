@@ -21,17 +21,17 @@ public class BdfFont
         return Parse(reader);
     }
 
-    public string Name;
-    public int PointSize;
-    public int ResolutionX;
-    public int ResolutionY;
-    public int Width;
-    public int Height;
-    public int OffsetX;
-    public int OffsetY;
-    public BdfProperties Properties;
-    public List<BdfGlyph> Glyphs;
-    public List<string> Comments;
+    public string Name { get; set; }
+    public int PointSize { get; set; }
+    public int ResolutionX { get; set; }
+    public int ResolutionY { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public int OffsetX { get; set; }
+    public int OffsetY { get; set; }
+    public BdfProperties Properties { get; set; }
+    public List<BdfGlyph> Glyphs { get; set; }
+    public List<string> Comments { get; set; }
 
     public BdfFont(
         string name = "",
