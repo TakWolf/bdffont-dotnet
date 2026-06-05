@@ -90,7 +90,7 @@ public class ParseDumpTests
         var font = new BdfFont();
         font.Properties["ABC"] = "Hello\nWorld";
         var e = Assert.Throws<BdfDumpException>(() => font.DumpToString());
-        Assert.Equal("Properties value cannot be multi-line string.", e.Message);
+        Assert.Equal("Property value cannot be multi-line string.", e.Message);
     }
 
     [Fact]

@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using BdfSpec.Errors;
 using BdfSpec.Utils;
 
 namespace BdfSpec;
 
-public partial class BdfProperties : IDictionary<string, object>, IList<KeyValuePair<string, object>>
+public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, IList<KeyValuePair<string, BdfPropertyValue>>
 {
     private const string KeyFoundry = "FOUNDRY";
     private const string KeyFamilyName = "FAMILY_NAME";
@@ -104,32 +103,19 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
     {
         if (!RegexPropKey().IsMatch(key))
         {
-            throw new BdfKeyException("Contains illegal characters.");
+            throw new BdfKeyException("Key contains illegal characters.");
         }
     }
 
-    private static void CheckValue(string key, object value)
+    private static void CheckValue(string key, BdfPropertyValue value)
     {
-        if (StringValueKeys.Contains(key))
+        if (StringValueKeys.Contains(key) && !value.IsString)
         {
-            if (value is not string)
-            {
-                throw new BdfValueException($"Expected type 'string', got '{value.GetType()}' instead.");
-            }
+            throw new BdfValueException($"Value of '{key}' must be 'string'.");
         }
-        else if (IntValueKeys.Contains(key))
+        if (IntValueKeys.Contains(key) && !value.IsInt)
         {
-            if (value is not int)
-            {
-                throw new BdfValueException($"Expected type 'int', got '{value.GetType()}' instead.");
-            }
-        }
-        else
-        {
-            if (value is not string && value is not int)
-            {
-                throw new BdfValueException($"Expected type 'string' or 'int', got '{value.GetType()}' instead.");
-            }
+            throw new BdfValueException($"Value of '{key}' must be 'int'.");
         }
     }
 
@@ -142,12 +128,12 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         }
     }
 
-    private readonly OrderedDictionary<string, object> _dictionary = new();
+    private readonly OrderedDictionary<string, BdfPropertyValue> _dictionary = new();
 
     public List<string> Comments;
 
     public BdfProperties(
-        IDictionary<string, object>? data = null,
+        IDictionary<string, BdfPropertyValue>? data = null,
         List<string>? comments = null)
     {
         if (data is not null)
@@ -162,17 +148,17 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
 
     public int Count => _dictionary.Count;
 
-    bool ICollection<KeyValuePair<string, object>>.IsReadOnly => false;
+    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.IsReadOnly => false;
 
     public ICollection<string> Keys => _dictionary.Keys;
 
-    public ICollection<object> Values => _dictionary.Values;
+    public ICollection<BdfPropertyValue> Values => _dictionary.Values;
 
-    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _dictionary.GetEnumerator();
+    public IEnumerator<KeyValuePair<string, BdfPropertyValue>> GetEnumerator() => _dictionary.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public object this[string key]
+    public BdfPropertyValue this[string key]
     {
         get => _dictionary[key.ToUpper()];
         set
@@ -184,29 +170,29 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         }
     }
 
-    KeyValuePair<string, object> IList<KeyValuePair<string, object>>.this[int index]
+    KeyValuePair<string, BdfPropertyValue> IList<KeyValuePair<string, BdfPropertyValue>>.this[int index]
     {
-        get => (_dictionary as IList<KeyValuePair<string, object>>)[index];
+        get => (_dictionary as IList<KeyValuePair<string, BdfPropertyValue>>)[index];
         set
         {
             var key = value.Key.ToUpper();
             CheckKey(key);
             CheckValue(key, value.Value);
-            (_dictionary as IList<KeyValuePair<string, object>>)[index] = new KeyValuePair<string, object>(key, value.Value);
+            (_dictionary as IList<KeyValuePair<string, BdfPropertyValue>>)[index] = new KeyValuePair<string, BdfPropertyValue>(key, value.Value);
         }
     }
 
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out object value) => _dictionary.TryGetValue(key.ToUpper(), out value);
+    public bool TryGetValue(string key, out BdfPropertyValue value) => _dictionary.TryGetValue(key.ToUpper(), out value);
 
     public bool ContainsKey(string key) => _dictionary.ContainsKey(key.ToUpper());
 
-    public bool ContainsValue(object value) => _dictionary.ContainsValue(value);
+    public bool ContainsValue(BdfPropertyValue value) => _dictionary.ContainsValue(value);
 
-    bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> item) => (_dictionary as ICollection<KeyValuePair<string, object>>).Contains(new KeyValuePair<string, object>(item.Key.ToUpper(), item.Value));
+    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.Contains(KeyValuePair<string, BdfPropertyValue> item) => (_dictionary as ICollection<KeyValuePair<string, BdfPropertyValue>>).Contains(new KeyValuePair<string, BdfPropertyValue>(item.Key.ToUpper(), item.Value));
 
-    int IList<KeyValuePair<string, object>>.IndexOf(KeyValuePair<string, object> item) => (_dictionary as IList<KeyValuePair<string, object>>).IndexOf(new KeyValuePair<string, object>(item.Key.ToUpper(), item.Value));
+    int IList<KeyValuePair<string, BdfPropertyValue>>.IndexOf(KeyValuePair<string, BdfPropertyValue> item) => (_dictionary as IList<KeyValuePair<string, BdfPropertyValue>>).IndexOf(new KeyValuePair<string, BdfPropertyValue>(item.Key.ToUpper(), item.Value));
 
-    public void Add(string key, object value)
+    public void Add(string key, BdfPropertyValue value)
     {
         key = key.ToUpper();
         CheckKey(key);
@@ -214,39 +200,51 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         _dictionary.Add(key, value);
     }
 
-    void ICollection<KeyValuePair<string, object>>.Add(KeyValuePair<string, object> item)
+    void ICollection<KeyValuePair<string, BdfPropertyValue>>.Add(KeyValuePair<string, BdfPropertyValue> item)
     {
         var key = item.Key.ToUpper();
         CheckKey(key);
         CheckValue(key, item.Value);
-        (_dictionary as ICollection<KeyValuePair<string, object>>).Add(new KeyValuePair<string, object>(key, item.Value));
+        (_dictionary as ICollection<KeyValuePair<string, BdfPropertyValue>>).Add(new KeyValuePair<string, BdfPropertyValue>(key, item.Value));
     }
 
-    void IList<KeyValuePair<string, object>>.Insert(int index, KeyValuePair<string, object> item)
+    void IList<KeyValuePair<string, BdfPropertyValue>>.Insert(int index, KeyValuePair<string, BdfPropertyValue> item)
     {
         var key = item.Key.ToUpper();
         CheckKey(key);
         CheckValue(key, item.Value);
-        (_dictionary as IList<KeyValuePair<string, object>>).Insert(index, new KeyValuePair<string, object>(key, item.Value));
+        (_dictionary as IList<KeyValuePair<string, BdfPropertyValue>>).Insert(index, new KeyValuePair<string, BdfPropertyValue>(key, item.Value));
     }
 
     public bool Remove(string key) => _dictionary.Remove(key.ToUpper());
 
-    bool ICollection<KeyValuePair<string, object>>.Remove(KeyValuePair<string, object> item) => (_dictionary as ICollection<KeyValuePair<string, object>>).Remove(new KeyValuePair<string, object>(item.Key.ToUpper(), item.Value));
+    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.Remove(KeyValuePair<string, BdfPropertyValue> item) => (_dictionary as ICollection<KeyValuePair<string, BdfPropertyValue>>).Remove(new KeyValuePair<string, BdfPropertyValue>(item.Key.ToUpper(), item.Value));
 
-    void IList<KeyValuePair<string, object>>.RemoveAt(int index) => (_dictionary as IList<KeyValuePair<string, object>>).RemoveAt(index);
+    void IList<KeyValuePair<string, BdfPropertyValue>>.RemoveAt(int index) => (_dictionary as IList<KeyValuePair<string, BdfPropertyValue>>).RemoveAt(index);
 
     public void Clear() => _dictionary.Clear();
 
-    void ICollection<KeyValuePair<string, object>>.CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => (_dictionary as ICollection<KeyValuePair<string, object>>).CopyTo(array, arrayIndex);
+    void ICollection<KeyValuePair<string, BdfPropertyValue>>.CopyTo(KeyValuePair<string, BdfPropertyValue>[] array, int arrayIndex) => (_dictionary as ICollection<KeyValuePair<string, BdfPropertyValue>>).CopyTo(array, arrayIndex);
 
-    public object? GetValue(string key) => TryGetValue(key, out var value) ? value : null;
+    public BdfPropertyValue? GetValue(string key) => TryGetValue(key, out var value) ? value : (BdfPropertyValue?)null;
 
-    public string? GetStringValue(string key) => (string?)GetValue(key);
+    public string? GetStringValue(string key) => GetValue(key)?.AsString();
 
-    public int? GetIntValue(string key) => (int?)GetValue(key);
+    public int? GetIntValue(string key) => GetValue(key)?.AsInt();
 
-    public void SetValue(string key, object? value)
+    public void SetValue(string key, BdfPropertyValue? value)
+    {
+        if (value is null)
+        {
+            Remove(key);
+        }
+        else
+        {
+            this[key] = value.Value;
+        }
+    }
+
+    public void SetStringValue(string key, string? value)
     {
         if (value is null)
         {
@@ -258,148 +256,160 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         }
     }
 
+    public void SetIntValue(string key, int? value)
+    {
+        if (value is null)
+        {
+            Remove(key);
+        }
+        else
+        {
+            this[key] = value.Value;
+        }
+    }
+
     public string? Foundry
     {
         get => GetStringValue(KeyFoundry);
-        set => SetValue(KeyFoundry, value);
+        set => SetStringValue(KeyFoundry, value);
     }
 
     public string? FamilyName
     {
         get => GetStringValue(KeyFamilyName);
-        set => SetValue(KeyFamilyName, value);
+        set => SetStringValue(KeyFamilyName, value);
     }
 
     public string? WeightName
     {
         get => GetStringValue(KeyWeightName);
-        set => SetValue(KeyWeightName, value);
+        set => SetStringValue(KeyWeightName, value);
     }
 
     public string? Slant
     {
         get => GetStringValue(KeySlant);
-        set => SetValue(KeySlant, value);
+        set => SetStringValue(KeySlant, value);
     }
 
     public string? SetWidthName
     {
         get => GetStringValue(KeySetWidthName);
-        set => SetValue(KeySetWidthName, value);
+        set => SetStringValue(KeySetWidthName, value);
     }
 
     public string? AddStyleName
     {
         get => GetStringValue(KeyAddStyleName);
-        set => SetValue(KeyAddStyleName, value);
+        set => SetStringValue(KeyAddStyleName, value);
     }
 
     public int? PixelSize
     {
         get => GetIntValue(KeyPixelSize);
-        set => SetValue(KeyPixelSize, value);
+        set => SetIntValue(KeyPixelSize, value);
     }
 
     public int? PointSize
     {
         get => GetIntValue(KeyPointSize);
-        set => SetValue(KeyPointSize, value);
+        set => SetIntValue(KeyPointSize, value);
     }
 
     public int? ResolutionX
     {
         get => GetIntValue(KeyResolutionX);
-        set => SetValue(KeyResolutionX, value);
+        set => SetIntValue(KeyResolutionX, value);
     }
 
     public int? ResolutionY
     {
         get => GetIntValue(KeyResolutionY);
-        set => SetValue(KeyResolutionY, value);
+        set => SetIntValue(KeyResolutionY, value);
     }
 
     public string? Spacing
     {
         get => GetStringValue(KeySpacing);
-        set => SetValue(KeySpacing, value);
+        set => SetStringValue(KeySpacing, value);
     }
 
     public int? AverageWidth
     {
         get => GetIntValue(KeyAverageWidth);
-        set => SetValue(KeyAverageWidth, value);
+        set => SetIntValue(KeyAverageWidth, value);
     }
 
     public string? CharsetRegistry
     {
         get => GetStringValue(KeyCharsetRegistry);
-        set => SetValue(KeyCharsetRegistry, value);
+        set => SetStringValue(KeyCharsetRegistry, value);
     }
 
     public string? CharsetEncoding
     {
         get => GetStringValue(KeyCharsetEncoding);
-        set => SetValue(KeyCharsetEncoding, value);
+        set => SetStringValue(KeyCharsetEncoding, value);
     }
 
     public int? DefaultChar
     {
         get => GetIntValue(KeyDefaultChar);
-        set => SetValue(KeyDefaultChar, value);
+        set => SetIntValue(KeyDefaultChar, value);
     }
 
     public int? FontAscent
     {
         get => GetIntValue(KeyFontAscent);
-        set => SetValue(KeyFontAscent, value);
+        set => SetIntValue(KeyFontAscent, value);
     }
 
     public int? FontDescent
     {
         get => GetIntValue(KeyFontDescent);
-        set => SetValue(KeyFontDescent, value);
+        set => SetIntValue(KeyFontDescent, value);
     }
 
     public int? XHeight
     {
         get => GetIntValue(KeyXHeight);
-        set => SetValue(KeyXHeight, value);
+        set => SetIntValue(KeyXHeight, value);
     }
 
     public int? CapHeight
     {
         get => GetIntValue(KeyCapHeight);
-        set => SetValue(KeyCapHeight, value);
+        set => SetIntValue(KeyCapHeight, value);
     }
 
     public int? UnderlinePosition
     {
         get => GetIntValue(KeyUnderlinePosition);
-        set => SetValue(KeyUnderlinePosition, value);
+        set => SetIntValue(KeyUnderlinePosition, value);
     }
 
     public int? UnderlineThickness
     {
         get => GetIntValue(KeyUnderlineThickness);
-        set => SetValue(KeyUnderlineThickness, value);
+        set => SetIntValue(KeyUnderlineThickness, value);
     }
 
     public string? FontVersion
     {
         get => GetStringValue(KeyFontVersion);
-        set => SetValue(KeyFontVersion, value);
+        set => SetStringValue(KeyFontVersion, value);
     }
 
     public string? Copyright
     {
         get => GetStringValue(KeyCopyright);
-        set => SetValue(KeyCopyright, value);
+        set => SetStringValue(KeyCopyright, value);
     }
 
     public string? Notice
     {
         get => GetStringValue(KeyNotice);
-        set => SetValue(KeyNotice, value);
+        set => SetStringValue(KeyNotice, value);
     }
 
     public string ToXlfd()
@@ -430,7 +440,7 @@ public partial class BdfProperties : IDictionary<string, object>, IList<KeyValue
         }
         foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
         {
-            object? value;
+            BdfPropertyValue? value;
             if ("".Equals(part))
             {
                 value = null;

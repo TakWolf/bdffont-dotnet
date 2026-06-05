@@ -7,7 +7,7 @@ public class BdfPropertiesTests
     [Fact]
     public void TestProperties1()
     {
-        var properties = new BdfProperties(new Dictionary<string, object>
+        var properties = new BdfProperties(new Dictionary<string, BdfPropertyValue>
         {
             { "PARAM_1", 1 },
             { "param_2", "2" },
@@ -227,7 +227,7 @@ public class BdfPropertiesTests
         var properties = new BdfProperties();
 
         var e = Assert.Throws<BdfKeyException>(() => properties["abc-def"] = "abcdef");
-        Assert.Equal("Contains illegal characters.", e.Message);
+        Assert.Equal("Key contains illegal characters.", e.Message);
     }
 
     [Fact]
@@ -245,7 +245,7 @@ public class BdfPropertiesTests
         var properties = new BdfProperties();
 
         var e = Assert.Throws<BdfValueException>(() => properties.SetValue("Foundry", 1));
-        Assert.Equal("Expected type 'string', got 'System.Int32' instead.", e.Message);
+        Assert.Equal("Value of 'FOUNDRY' must be 'string'.", e.Message);
     }
 
     [Fact]
@@ -254,15 +254,6 @@ public class BdfPropertiesTests
         var properties = new BdfProperties();
 
         var e = Assert.Throws<BdfValueException>(() => properties.SetValue("PIXEL_SIZE", "1"));
-        Assert.Equal("Expected type 'int', got 'System.String' instead.", e.Message);
-    }
-
-    [Fact]
-    public void TestProperties14()
-    {
-        var properties = new BdfProperties();
-
-        var e = Assert.Throws<BdfValueException>(() => properties.SetValue("FLOAT_PARAM", 1.2));
-        Assert.Equal("Expected type 'string' or 'int', got 'System.Double' instead.", e.Message);
+        Assert.Equal("Value of 'PIXEL_SIZE' must be 'int'.", e.Message);
     }
 }

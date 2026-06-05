@@ -70,7 +70,7 @@ internal static partial class BdfUtil
         return values;
     }
 
-    private static object ConvertTailToPropertiesValue(string tail)
+    private static BdfPropertyValue ConvertTailToPropertyValue(string tail)
     {
         if (tail.StartsWith('"') && tail.EndsWith('"'))
         {
@@ -103,14 +103,14 @@ internal static partial class BdfUtil
                     properties.Comments.Add(tail);
                     break;
                 default:
-                    var value = ConvertTailToPropertiesValue(tail);
+                    var value = ConvertTailToPropertyValue(tail);
                     try
                     {
                         properties[word] = value;
                     }
                     catch (BdfValueException)
                     {
-                        properties[word] = value.ToString()!;
+                        properties[word] = value.ToString();
                     }
                     break;
             }
@@ -339,13 +339,14 @@ internal static partial class BdfUtil
         writer.Write('\n');
     }
 
-    private static void DumpPropertiesLine(TextWriter writer, string key, object value)
+    private static void DumpPropertyLine(TextWriter writer, string key, BdfPropertyValue value)
     {
-        if (value is string stringValue)
+        if (value.IsString)
         {
+            var stringValue = value.AsString();
             if (stringValue.IndexOfAny(NewLineChars) >= 0)
             {
-                throw new BdfDumpException("Properties value cannot be multi-line string.");
+                throw new BdfDumpException("Property value cannot be multi-line string.");
             }
             stringValue = stringValue.Replace("\"", "\"\"");
             stringValue = $"\"{stringValue}\"";
@@ -375,7 +376,7 @@ internal static partial class BdfUtil
         }
         foreach (var (key, value) in font.Properties)
         {
-            DumpPropertiesLine(writer, key, value);
+            DumpPropertyLine(writer, key, value);
         }
         DumpWordStringLine(writer, WordEndProperties);
 
