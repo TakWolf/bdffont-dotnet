@@ -2,7 +2,7 @@ using BdfSpec.Utils;
 
 namespace BdfSpec;
 
-public class BdfFont : IEquatable<BdfFont>
+public class BdfFont : ICopyable<BdfFont>, IEquatable<BdfFont>
 {
     public static BdfFont Parse(TextReader reader)
     {
@@ -104,6 +104,24 @@ public class BdfFont : IEquatable<BdfFont>
         using var writer = new StreamWriter(path);
         Dump(writer);
     }
+
+    public BdfFont Copy() => new(
+        Name,
+        PointSize,
+        Resolution,
+        BoundingBox,
+        Properties,
+        Glyphs,
+        Comments);
+
+    public BdfFont DeepCopy() => new(
+        Name,
+        PointSize,
+        Resolution,
+        BoundingBox,
+        Properties.DeepCopy(),
+        CopyUtil.DeepCopyList(Glyphs),
+        [.. Comments]);
 
     public bool Equals(BdfFont? other)
     {

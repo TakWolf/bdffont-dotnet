@@ -2,7 +2,7 @@ using BdfSpec.Utils;
 
 namespace BdfSpec;
 
-public class BdfGlyph : IEquatable<BdfGlyph>
+public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
 {
     public string Name { get; set; }
     public int Encoding { get; set; }
@@ -64,6 +64,24 @@ public class BdfGlyph : IEquatable<BdfGlyph>
         get => (Width, Height, OffsetX, OffsetY);
         set => (Width, Height, OffsetX, OffsetY) = value;
     }
+
+    public BdfGlyph Copy() => new(
+        Name,
+        Encoding,
+        ScalableWidth,
+        DeviceWidth,
+        BoundingBox,
+        Bitmap,
+        Comments);
+
+    public BdfGlyph DeepCopy() => new(
+        Name,
+        Encoding,
+        ScalableWidth,
+        DeviceWidth,
+        BoundingBox,
+        CopyUtil.DeepCopyBitmap(Bitmap),
+        [.. Comments]);
 
     public bool Equals(BdfGlyph? other)
     {
