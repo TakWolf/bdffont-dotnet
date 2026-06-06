@@ -441,7 +441,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
         {
             BdfPropertyValue? value;
-            if ("".Equals(part))
+            if (part is "")
             {
                 value = null;
             }

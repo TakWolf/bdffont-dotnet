@@ -37,7 +37,7 @@ internal static partial class BdfUtil
         while (reader.ReadLine() is { } line)
         {
             line = line.Trim();
-            if ("".Equals(line))
+            if (line is "")
             {
                 continue;
             }
@@ -195,7 +195,7 @@ internal static partial class BdfUtil
                         throw BdfMissingWordException.Create(WordBbx);
                     }
                     List<List<byte>>? bitmap = null;
-                    if (WordBitmap.Equals(word))
+                    if (word is WordBitmap)
                     {
                         bitmap = ParseBitmapSegment(lines, boundingBox.Value.Item1);
                     }
@@ -298,7 +298,7 @@ internal static partial class BdfUtil
             switch (word)
             {
                 case WordStartFont:
-                    if (!SpecVersion.Equals(tail))
+                    if (tail is not SpecVersion)
                     {
                         throw new BdfParseException($"Spec version not support: {tail}");
                     }
@@ -316,7 +316,7 @@ internal static partial class BdfUtil
         if (tail is not null)
         {
             tail = tail.Trim();
-            if (!"".Equals(tail))
+            if (tail is not "")
             {
                 if (tail.IndexOfAny(NewLineChars) >= 0)
                 {
