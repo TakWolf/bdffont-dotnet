@@ -5,7 +5,7 @@ using BdfSpec.Utils;
 
 namespace BdfSpec;
 
-public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, IList<KeyValuePair<string, BdfPropertyValue>>
+public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, IList<KeyValuePair<string, BdfPropertyValue>>, IEquatable<BdfProperties>
 {
     private const string KeyFoundry = "FOUNDRY";
     private const string KeyFamilyName = "FAMILY_NAME";
@@ -460,4 +460,37 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
             SetValue(key, value);
         }
     }
+
+    public bool Equals(BdfProperties? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return EqualUtil.DictionaryEquals(_dictionary, other._dictionary) &&
+               EqualUtil.ListEquals(Comments, other.Comments);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((BdfProperties)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

@@ -2,7 +2,7 @@ using BdfSpec.Utils;
 
 namespace BdfSpec;
 
-public class BdfFont
+public class BdfFont : IEquatable<BdfFont>
 {
     public static BdfFont Parse(TextReader reader)
     {
@@ -104,4 +104,46 @@ public class BdfFont
         using var writer = new StreamWriter(path);
         Dump(writer);
     }
+
+    public bool Equals(BdfFont? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return Name == other.Name &&
+               PointSize == other.PointSize &&
+               ResolutionX == other.ResolutionX &&
+               ResolutionY == other.ResolutionY &&
+               Width == other.Width &&
+               Height == other.Height &&
+               OffsetX == other.OffsetX &&
+               OffsetY == other.OffsetY &&
+               Properties.Equals(other.Properties) &&
+               EqualUtil.ListEquals(Glyphs, other.Glyphs) &&
+               EqualUtil.ListEquals(Comments, other.Comments);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((BdfFont)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

@@ -1,6 +1,8 @@
+using BdfSpec.Utils;
+
 namespace BdfSpec;
 
-public class BdfGlyph
+public class BdfGlyph : IEquatable<BdfGlyph>
 {
     public string Name { get; set; }
     public int Encoding { get; set; }
@@ -62,4 +64,47 @@ public class BdfGlyph
         get => (Width, Height, OffsetX, OffsetY);
         set => (Width, Height, OffsetX, OffsetY) = value;
     }
+
+    public bool Equals(BdfGlyph? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return Name == other.Name &&
+               Encoding == other.Encoding &&
+               ScalableWidthX == other.ScalableWidthX &&
+               ScalableWidthY == other.ScalableWidthY &&
+               DeviceWidthX == other.DeviceWidthX &&
+               DeviceWidthY == other.DeviceWidthY &&
+               Width == other.Width &&
+               Height == other.Height &&
+               OffsetX == other.OffsetX &&
+               OffsetY == other.OffsetY &&
+               EqualUtil.BitmapEquals(Bitmap, other.Bitmap) &&
+               EqualUtil.ListEquals(Comments, other.Comments);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((BdfGlyph)other);
+    }
+
+    public override int GetHashCode() => 0;
 }
