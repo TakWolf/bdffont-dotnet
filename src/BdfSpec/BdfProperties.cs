@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using System.Text.RegularExpressions;
 using BdfSpec.Errors;
 using BdfSpec.Utils;
@@ -415,7 +416,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
 
     public string ToXlfd()
     {
-        List<string> parts = [""];
+        var xlfd = new StringBuilder();
         foreach (var key in XlfdKeysOrder)
         {
             var value = GetValue(key)?.ToString() ?? "";
@@ -423,9 +424,10 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
             {
                 CheckXlfdStringValue(key, value);
             }
-            parts.Add(value);
+            xlfd.Append('-');
+            xlfd.Append(value);
         }
-        return string.Join("-", parts);
+        return xlfd.ToString();
     }
 
     public void UpdateByXlfd(string fontName)
