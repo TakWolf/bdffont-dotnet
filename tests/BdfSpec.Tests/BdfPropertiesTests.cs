@@ -10,7 +10,7 @@ public class BdfPropertiesTests
         var properties = new BdfProperties(new Dictionary<string, BdfPropertyValue>
         {
             { "PARAM_1", 1 },
-            { "param_2", "2" },
+            { "param_2", "2" }
         }, comments: [
             "This is a comment.",
             "This is a comment, too."
