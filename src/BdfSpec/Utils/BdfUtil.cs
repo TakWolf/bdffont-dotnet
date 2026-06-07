@@ -59,15 +59,13 @@ internal static partial class BdfUtil
         }
     }
 
-    private static List<int> ConvertTailToInts(string tail)
+    private static void ConvertTailToInts(string tail, Span<int> values)
     {
         var parts = RegexBlanks().Split(tail);
-        var values = new List<int>(parts.Length);
-        foreach (var part in parts)
+        for (var i = 0; i < parts.Length; i++)
         {
-            values.Add(int.Parse(part));
+            values[i] = int.Parse(parts[i]);
         }
-        return values;
     }
 
     private static BdfPropertyValue ConvertTailToPropertyValue(string tail)
@@ -153,6 +151,8 @@ internal static partial class BdfUtil
         (int, int)? deviceWidth = null;
         (int, int, int, int)? boundingBox = null;
         List<string> comments = [];
+
+        Span<int> intValues = stackalloc int[4];
         while (lines.MoveNext())
         {
             var (word, tail) = lines.Current;
@@ -162,16 +162,16 @@ internal static partial class BdfUtil
                     encoding = int.Parse(tail);
                     break;
                 case WordSWidth:
-                    var scalableWidthValues = ConvertTailToInts(tail);
-                    scalableWidth = (scalableWidthValues[0], scalableWidthValues[1]);
+                    ConvertTailToInts(tail, intValues);
+                    scalableWidth = (intValues[0], intValues[1]);
                     break;
                 case WordDWidth:
-                    var deviceWidthValues = ConvertTailToInts(tail);
-                    deviceWidth = (deviceWidthValues[0], deviceWidthValues[1]);
+                    ConvertTailToInts(tail, intValues);
+                    deviceWidth = (intValues[0], intValues[1]);
                     break;
                 case WordBbx:
-                    var boundingBoxValues = ConvertTailToInts(tail);
-                    boundingBox = (boundingBoxValues[0], boundingBoxValues[1], boundingBoxValues[2], boundingBoxValues[3]);
+                    ConvertTailToInts(tail, intValues);
+                    boundingBox = (intValues[0], intValues[1], intValues[2], intValues[3]);
                     break;
                 case WordComment:
                     comments.Add(tail);
@@ -224,6 +224,8 @@ internal static partial class BdfUtil
         int? glyphsCount = null;
         List<BdfGlyph> glyphs = [];
         List<string> comments = [];
+
+        Span<int> intValues = stackalloc int[4];
         while (lines.MoveNext())
         {
             var (word, tail) = lines.Current;
@@ -233,13 +235,13 @@ internal static partial class BdfUtil
                     name = tail;
                     break;
                 case WordSize:
-                    var sizeValues = ConvertTailToInts(tail);
-                    pointSize = sizeValues[0];
-                    resolution = (sizeValues[1], sizeValues[2]);
+                    ConvertTailToInts(tail, intValues);
+                    pointSize = intValues[0];
+                    resolution = (intValues[1], intValues[2]);
                     break;
                 case WordFontBoundingBox:
-                    var boundingBoxValues = ConvertTailToInts(tail);
-                    boundingBox = (boundingBoxValues[0], boundingBoxValues[1], boundingBoxValues[2], boundingBoxValues[3]);
+                    ConvertTailToInts(tail, intValues);
+                    boundingBox = (intValues[0], intValues[1], intValues[2], intValues[3]);
                     break;
                 case WordStartProperties:
                     properties = ParsePropertiesSegment(lines, int.Parse(tail));
