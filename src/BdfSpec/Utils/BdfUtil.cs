@@ -334,7 +334,8 @@ internal static partial class BdfUtil
         writer.Write(word);
         foreach (var value in values)
         {
-            writer.Write($" {value}");
+            writer.Write(' ');
+            writer.Write(value);
         }
         writer.Write('\n');
     }
