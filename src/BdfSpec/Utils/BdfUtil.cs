@@ -344,6 +344,8 @@ internal static partial class BdfUtil
 
     private static void DumpPropertyLine(TextWriter writer, string key, BdfPropertyValue value)
     {
+        writer.Write(key);
+        writer.Write(' ');
         if (value.IsString)
         {
             var stringValue = value.AsString();
@@ -351,13 +353,25 @@ internal static partial class BdfUtil
             {
                 throw new BdfDumpException("Property value cannot be multi-line string.");
             }
-            stringValue = stringValue.Replace("\"", "\"\"");
-            stringValue = $"\"{stringValue}\"";
-            value = stringValue;
+
+            writer.Write('"');
+            foreach (var c in stringValue)
+            {
+                if (c is '"')
+                {
+                    writer.Write("\"\"");
+                }
+                else
+                {
+                    writer.Write(c);
+                }
+            }
+            writer.Write('"');
         }
-        writer.Write(key);
-        writer.Write(' ');
-        writer.Write(value);
+        else
+        {
+            writer.Write(value.AsInt());
+        }
         writer.Write('\n');
     }
 
