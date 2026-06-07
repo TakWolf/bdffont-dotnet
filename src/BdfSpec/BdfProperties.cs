@@ -441,8 +441,10 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         {
             throw new BdfXlfdException("Must be 14 '-'.");
         }
-        foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
+        for (var i = 0; i < XlfdKeysOrder.Length; i++)
         {
+            var key = XlfdKeysOrder[i];
+            var part = parts[i];
             BdfPropertyValue? value;
             if (part is "")
             {
