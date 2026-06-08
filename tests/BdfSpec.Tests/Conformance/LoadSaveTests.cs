@@ -4,43 +4,18 @@ namespace BdfSpec.Tests.Conformance;
 
 public class LoadSaveTests
 {
-    [Fact]
-    public void TestUnifont()
+    [Theory]
+    [InlineData("demo", "demo.bdf")]
+    [InlineData("misaki", "misaki_gothic.bdf")]
+    [InlineData("misaki", "misaki_gothic_2nd.bdf")]
+    [InlineData("misaki", "misaki_mincho.bdf")]
+    [InlineData("unifont", "unifont-17.0.04.bdf")]
+    public void TestLoadSave(string fontDir, string fontFileName)
     {
-        var loadPath = Path.Combine("assets", "unifont", "unifont-17.0.04.bdf");
-        var savePath = Path.Combine(PathUtil.CreateTempDir(), "unifont-17.0.04.bdf");
+        var loadPath = Path.Combine("assets", fontDir, fontFileName);
+        var savePath = Path.Combine(PathUtil.CreateTempDir(), fontFileName);
         var font = BdfFont.Load(loadPath);
         font.Save(savePath);
-        Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath).Replace("\nBITMAP\n", "\nBITMAP \n"));
-    }
-
-    [Fact]
-    public void TestMisakiGothic()
-    {
-        var loadPath = Path.Combine("assets", "misaki", "misaki_gothic.bdf");
-        var savePath = Path.Combine(PathUtil.CreateTempDir(), "misaki_gothic.bdf");
-        var font = BdfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath));
-    }
-
-    [Fact]
-    public void TestMisakiGothic2()
-    {
-        var loadPath = Path.Combine("assets", "misaki", "misaki_gothic_2nd.bdf");
-        var savePath = Path.Combine(PathUtil.CreateTempDir(), "misaki_gothic_2nd.bdf");
-        var font = BdfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath));
-    }
-
-    [Fact]
-    public void TestMisakiMincho()
-    {
-        var loadPath = Path.Combine("assets", "misaki", "misaki_mincho.bdf");
-        var savePath = Path.Combine(PathUtil.CreateTempDir(), "misaki_mincho.bdf");
-        var font = BdfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n"), File.ReadAllText(savePath));
+        Assert.Equal(File.ReadAllText(loadPath).Replace("\r\n", "\n").Replace("\nBITMAP \n", "\nBITMAP\n"), File.ReadAllText(savePath));
     }
 }

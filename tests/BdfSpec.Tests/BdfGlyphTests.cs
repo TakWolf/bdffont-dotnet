@@ -41,4 +41,69 @@ public class BdfGlyphTests
         Assert.Equal(11, glyph.OffsetX);
         Assert.Equal(12, glyph.OffsetY);
     }
+
+    [Fact]
+    public void TestCopy()
+    {
+        var glyph1 = new BdfGlyph(
+            name: "A",
+            encoding: 65,
+            scalableWidth: (1, 2),
+            deviceWidth: (3, 4),
+            boundingBox: (5, 6, 7, 8),
+            bitmap: [[1, 0, 0, 1]],
+            comments: ["This is a comment."]);
+        var glyph2 = glyph1.Copy();
+
+        Assert.Equal(glyph1, glyph2);
+        Assert.NotSame(glyph1, glyph2);
+        Assert.Same(glyph1.Bitmap, glyph2.Bitmap);
+        Assert.Same(glyph1.Comments, glyph2.Comments);
+    }
+
+    [Fact]
+    public void TestDeepCopy()
+    {
+        var glyph1 = new BdfGlyph(
+            name: "A",
+            encoding: 65,
+            scalableWidth: (1, 2),
+            deviceWidth: (3, 4),
+            boundingBox: (5, 6, 7, 8),
+            bitmap: [[1, 0, 0, 1]],
+            comments: ["This is a comment."]);
+        var glyph2 = glyph1.DeepCopy();
+
+        Assert.Equal(glyph1, glyph2);
+        Assert.NotSame(glyph1, glyph2);
+        Assert.NotSame(glyph1.Bitmap, glyph2.Bitmap);
+        Assert.NotSame(glyph1.Comments, glyph2.Comments);
+
+        foreach (var (bitmapRow1, bitmapRow2) in glyph1.Bitmap.Zip(glyph2.Bitmap))
+        {
+            Assert.NotSame(bitmapRow1, bitmapRow2);
+        }
+    }
+
+    [Fact]
+    public void TestEquals()
+    {
+        var glyph1 = new BdfGlyph(
+            name: "A",
+            encoding: 65,
+            scalableWidth: (1, 2),
+            deviceWidth: (3, 4),
+            boundingBox: (5, 6, 7, 8),
+            bitmap: [[1, 0, 0, 1]],
+            comments: ["This is a comment."]);
+        var glyph2 = new BdfGlyph(
+            name: "A",
+            encoding: 65,
+            scalableWidth: (1, 2),
+            deviceWidth: (3, 4),
+            boundingBox: (5, 6, 7, 8),
+            bitmap: [[1, 0, 0, 1]],
+            comments: ["This is a comment."]);
+        Assert.Equal(glyph1, glyph2);
+    }
 }

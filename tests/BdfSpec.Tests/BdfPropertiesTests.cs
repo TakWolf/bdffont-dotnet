@@ -244,16 +244,57 @@ public class BdfPropertiesTests
     {
         var properties = new BdfProperties();
 
-        var e = Assert.Throws<BdfValueException>(() => properties.SetValue("Foundry", 1));
-        Assert.Equal("Value of 'FOUNDRY' must be 'string'.", e.Message);
+        {
+            var e = Assert.Throws<BdfValueException>(() => properties.SetValue("FOUNDRY", 1));
+            Assert.Equal("Value of 'FOUNDRY' must be 'string'.", e.Message);
+        }
+        {
+            var e = Assert.Throws<BdfValueException>(() => properties.SetValue("PIXEL_SIZE", "1"));
+            Assert.Equal("Value of 'PIXEL_SIZE' must be 'int'.", e.Message);
+        }
     }
 
     [Fact]
-    public void TestProperties13()
+    public void TestCopy()
     {
-        var properties = new BdfProperties();
+        var properties1 = new BdfProperties();
+        properties1.FamilyName = "Demo Font";
+        properties1.PointSize = 100;
+        properties1.Comments = ["This is a comment."];
+        var properties2 = properties1.Copy();
 
-        var e = Assert.Throws<BdfValueException>(() => properties.SetValue("PIXEL_SIZE", "1"));
-        Assert.Equal("Value of 'PIXEL_SIZE' must be 'int'.", e.Message);
+        Assert.Equal(properties1, properties2);
+        Assert.NotSame(properties1, properties2);
+        Assert.Same(properties1.Comments, properties2.Comments);
+    }
+
+    [Fact]
+    public void TestDeepCopy()
+    {
+        var properties1 = new BdfProperties();
+        properties1.FamilyName = "Demo Font";
+        properties1.PointSize = 100;
+        properties1.Comments = ["This is a comment."];
+        var properties2 = properties1.DeepCopy();
+
+        Assert.Equal(properties1, properties2);
+        Assert.NotSame(properties1, properties2);
+        Assert.NotSame(properties1.Comments, properties2.Comments);
+    }
+
+    [Fact]
+    public void TestEquals()
+    {
+        var properties1 = new BdfProperties();
+        properties1.FamilyName = "Demo Font";
+        properties1.PointSize = 100;
+        properties1.Comments = ["This is a comment."];
+
+        var properties2 = new BdfProperties();
+        properties2.FamilyName = "Demo Font";
+        properties2.PointSize = 100;
+        properties2.Comments = ["This is a comment."];
+
+        Assert.Equal(properties1, properties2);
     }
 }
