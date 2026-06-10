@@ -29,6 +29,8 @@ internal static partial class BdfUtil
 
     private static readonly char[] NewLineChars = ['\n', '\r'];
 
+    private static readonly char[] HexUpperChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+
     [GeneratedRegex(@"\s+")]
     private static partial Regex RegexBlanks();
 
@@ -424,7 +426,8 @@ internal static partial class BdfUtil
                         var pixel = pixelIndex < widthLimit && bitmapRow[pixelIndex] != 0 ? 1 : 0;
                         b = (byte)((b << 1) | pixel);
                     }
-                    writer.Write($"{b:X2}");
+                    writer.Write(HexUpperChars[b >> 4]);
+                    writer.Write(HexUpperChars[b & 0x0F]);
                 }
                 writer.Write('\n');
             }
