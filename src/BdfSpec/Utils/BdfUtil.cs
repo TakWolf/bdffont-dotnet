@@ -118,9 +118,9 @@ internal static partial class BdfUtil
         throw BdfMissingWordException.Create(WordEndProperties);
     }
 
-    private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int glyphWidth)
+    private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int glyphWidth, int glyphHeight)
     {
-        var bitmap = new List<List<byte>>();
+        var bitmap = new List<List<byte>>(glyphHeight);
         while (lines.MoveNext())
         {
             var (word, _) = lines.Current;
@@ -199,7 +199,7 @@ internal static partial class BdfUtil
                     List<List<byte>>? bitmap = null;
                     if (word is WordBitmap)
                     {
-                        bitmap = ParseBitmapSegment(lines, boundingBox.Value.Item1);
+                        bitmap = ParseBitmapSegment(lines, boundingBox.Value.Item1, boundingBox.Value.Item2);
                     }
                     return new BdfGlyph(
                         name,
