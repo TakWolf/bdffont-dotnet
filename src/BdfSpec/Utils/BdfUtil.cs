@@ -250,6 +250,7 @@ internal static partial class BdfUtil
                     break;
                 case WordChars:
                     glyphsCount = int.Parse(tail);
+                    glyphs.EnsureCapacity(glyphsCount.Value);
                     break;
                 case WordStartChar:
                     glyphs.Add(ParseGlyphSegment(lines, tail));
