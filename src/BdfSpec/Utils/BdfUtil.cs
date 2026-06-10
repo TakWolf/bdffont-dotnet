@@ -414,13 +414,14 @@ internal static partial class BdfUtil
             var bitmapWidth = (glyph.Width + 7) / 8 * 8;
             foreach (var bitmapRow in glyph.Bitmap)
             {
+                var widthLimit = Math.Min(bitmapRow.Count, glyph.Width);
                 for (var i = 0; i < bitmapWidth; i += 8)
                 {
                     byte b = 0;
                     for (var shift = 0; shift < 8; shift++)
                     {
                         var pixelIndex = i + shift;
-                        var pixel = pixelIndex < Math.Min(bitmapRow.Count, glyph.Width) && bitmapRow[pixelIndex] != 0 ? 1 : 0;
+                        var pixel = pixelIndex < widthLimit && bitmapRow[pixelIndex] != 0 ? 1 : 0;
                         b = (byte)((b << 1) | pixel);
                     }
                     writer.Write($"{b:X2}");
