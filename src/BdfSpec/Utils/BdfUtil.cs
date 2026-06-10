@@ -87,7 +87,7 @@ internal static partial class BdfUtil
 
     private static BdfProperties ParsePropertiesSegment(IEnumerator<(string, string)> lines, int count)
     {
-        var properties = new BdfProperties();
+        var properties = new BdfProperties(count);
         while (lines.MoveNext())
         {
             var (word, tail) = lines.Current;
