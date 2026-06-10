@@ -334,14 +334,47 @@ internal static partial class BdfUtil
         writer.Write('\n');
     }
 
-    private static void DumpWordIntsLine(TextWriter writer, string word, params int[] values)
+    private static void DumpWordIntsLine(TextWriter writer, string word, int value)
     {
         writer.Write(word);
-        foreach (var value in values)
-        {
-            writer.Write(' ');
-            writer.Write(value);
-        }
+        writer.Write(' ');
+        writer.Write(value);
+        writer.Write('\n');
+    }
+
+    private static void DumpWordIntsLine(TextWriter writer, string word, int value1, int value2)
+    {
+        writer.Write(word);
+        writer.Write(' ');
+        writer.Write(value1);
+        writer.Write(' ');
+        writer.Write(value2);
+        writer.Write('\n');
+    }
+
+    private static void DumpWordIntsLine(TextWriter writer, string word, int value1, int value2, int value3)
+    {
+        writer.Write(word);
+        writer.Write(' ');
+        writer.Write(value1);
+        writer.Write(' ');
+        writer.Write(value2);
+        writer.Write(' ');
+        writer.Write(value3);
+        writer.Write('\n');
+    }
+
+    private static void DumpWordIntsLine(TextWriter writer, string word, int value1, int value2, int value3, int value4)
+    {
+        writer.Write(word);
+        writer.Write(' ');
+        writer.Write(value1);
+        writer.Write(' ');
+        writer.Write(value2);
+        writer.Write(' ');
+        writer.Write(value3);
+        writer.Write(' ');
+        writer.Write(value4);
         writer.Write('\n');
     }
 
