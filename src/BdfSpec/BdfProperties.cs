@@ -133,19 +133,35 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
 
     public List<string> Comments { get; set; }
 
+    public BdfProperties(List<string>? comments = null) : this(0, comments) { }
+
     public BdfProperties(
-        IDictionary<string, BdfPropertyValue>? properties = null,
+        int capacity,
         List<string>? comments = null)
     {
-        _properties = new OrderedDictionary<string, BdfPropertyValue>(properties?.Count ?? 0);
-        if (properties is not null)
-        {
-            foreach (var (key, value) in properties)
-            {
-                this[key] = value;
-            }
-        }
+        _properties = new OrderedDictionary<string, BdfPropertyValue>(capacity);
         Comments = comments ?? [];
+    }
+
+    public BdfProperties(
+        IDictionary<string, BdfPropertyValue> properties,
+        List<string>? comments = null) : this(properties.Count, comments)
+    {
+        foreach (var (key, value) in properties)
+        {
+            this[key] = value;
+        }
+    }
+
+    public BdfProperties(
+        IEnumerable<KeyValuePair<string, BdfPropertyValue>> properties,
+        List<string>? comments = null) :
+        this((properties as ICollection<KeyValuePair<string, BdfPropertyValue>>)?.Count ?? 0, comments)
+    {
+        foreach (var (key, value) in properties)
+        {
+            this[key] = value;
+        }
     }
 
     public int Count => _properties.Count;
