@@ -35,7 +35,8 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
     private const string KeyCopyright = "COPYRIGHT";
     private const string KeyNotice = "NOTICE";
 
-    private static readonly string[] StringValueKeys = [
+    private static readonly HashSet<string> StringValueKeys = new(StringComparer.OrdinalIgnoreCase)
+    {
         KeyFoundry,
         KeyFamilyName,
         KeyWeightName,
@@ -48,9 +49,10 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         KeyFontVersion,
         KeyCopyright,
         KeyNotice
-    ];
+    };
 
-    private static readonly string[] IntValueKeys = [
+    private static readonly HashSet<string> IntValueKeys = new(StringComparer.OrdinalIgnoreCase)
+    {
         KeyPixelSize,
         KeyPointSize,
         KeyResolutionX,
@@ -63,9 +65,10 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         KeyCapHeight,
         KeyUnderlinePosition,
         KeyUnderlineThickness
-    ];
+    };
 
-    private static readonly string[] XlfdStringValueKeys = [
+    private static readonly HashSet<string> XlfdStringValueKeys = new(StringComparer.OrdinalIgnoreCase)
+    {
         KeyFoundry,
         KeyFamilyName,
         KeyWeightName,
@@ -75,7 +78,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         KeySpacing,
         KeyCharsetRegistry,
         KeyCharsetEncoding
-    ];
+    };
 
     private static readonly string[] XlfdKeysOrder = [
         KeyFoundry,
@@ -139,7 +142,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         int capacity,
         List<string>? comments = null)
     {
-        _properties = new OrderedDictionary<string, BdfPropertyValue>(capacity);
+        _properties = new OrderedDictionary<string, BdfPropertyValue>(capacity, StringComparer.OrdinalIgnoreCase);
         Comments = comments ?? [];
     }
 
@@ -178,13 +181,12 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
 
     public BdfPropertyValue this[string key]
     {
-        get => _properties[key.ToUpper()];
+        get => _properties[key];
         set
         {
-            key = key.ToUpper();
             CheckKey(key);
             CheckValue(key, value);
-            _properties[key] = value;
+            _properties[key.ToUpperInvariant()] = value;
         }
     }
 
@@ -193,50 +195,49 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         get => (_properties as IList<KeyValuePair<string, BdfPropertyValue>>)[index];
         set
         {
-            var key = value.Key.ToUpper();
+            var key = value.Key;
             CheckKey(key);
             CheckValue(key, value.Value);
-            (_properties as IList<KeyValuePair<string, BdfPropertyValue>>)[index] = new KeyValuePair<string, BdfPropertyValue>(key, value.Value);
+            (_properties as IList<KeyValuePair<string, BdfPropertyValue>>)[index] = new KeyValuePair<string, BdfPropertyValue>(key.ToUpperInvariant(), value.Value);
         }
     }
 
-    public bool TryGetValue(string key, out BdfPropertyValue value) => _properties.TryGetValue(key.ToUpper(), out value);
+    public bool TryGetValue(string key, out BdfPropertyValue value) => _properties.TryGetValue(key, out value);
 
-    public bool ContainsKey(string key) => _properties.ContainsKey(key.ToUpper());
+    public bool ContainsKey(string key) => _properties.ContainsKey(key);
 
     public bool ContainsValue(BdfPropertyValue value) => _properties.ContainsValue(value);
 
-    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.Contains(KeyValuePair<string, BdfPropertyValue> item) => (_properties as ICollection<KeyValuePair<string, BdfPropertyValue>>).Contains(new KeyValuePair<string, BdfPropertyValue>(item.Key.ToUpper(), item.Value));
+    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.Contains(KeyValuePair<string, BdfPropertyValue> item) => (_properties as ICollection<KeyValuePair<string, BdfPropertyValue>>).Contains(new KeyValuePair<string, BdfPropertyValue>(item.Key, item.Value));
 
-    int IList<KeyValuePair<string, BdfPropertyValue>>.IndexOf(KeyValuePair<string, BdfPropertyValue> item) => (_properties as IList<KeyValuePair<string, BdfPropertyValue>>).IndexOf(new KeyValuePair<string, BdfPropertyValue>(item.Key.ToUpper(), item.Value));
+    int IList<KeyValuePair<string, BdfPropertyValue>>.IndexOf(KeyValuePair<string, BdfPropertyValue> item) => (_properties as IList<KeyValuePair<string, BdfPropertyValue>>).IndexOf(new KeyValuePair<string, BdfPropertyValue>(item.Key, item.Value));
 
     public void Add(string key, BdfPropertyValue value)
     {
-        key = key.ToUpper();
         CheckKey(key);
         CheckValue(key, value);
-        _properties.Add(key, value);
+        _properties.Add(key.ToUpperInvariant(), value);
     }
 
     void ICollection<KeyValuePair<string, BdfPropertyValue>>.Add(KeyValuePair<string, BdfPropertyValue> item)
     {
-        var key = item.Key.ToUpper();
+        var key = item.Key;
         CheckKey(key);
         CheckValue(key, item.Value);
-        (_properties as ICollection<KeyValuePair<string, BdfPropertyValue>>).Add(new KeyValuePair<string, BdfPropertyValue>(key, item.Value));
+        (_properties as ICollection<KeyValuePair<string, BdfPropertyValue>>).Add(new KeyValuePair<string, BdfPropertyValue>(key.ToUpperInvariant(), item.Value));
     }
 
     void IList<KeyValuePair<string, BdfPropertyValue>>.Insert(int index, KeyValuePair<string, BdfPropertyValue> item)
     {
-        var key = item.Key.ToUpper();
+        var key = item.Key;
         CheckKey(key);
         CheckValue(key, item.Value);
-        (_properties as IList<KeyValuePair<string, BdfPropertyValue>>).Insert(index, new KeyValuePair<string, BdfPropertyValue>(key, item.Value));
+        (_properties as IList<KeyValuePair<string, BdfPropertyValue>>).Insert(index, new KeyValuePair<string, BdfPropertyValue>(key.ToUpperInvariant(), item.Value));
     }
 
-    public bool Remove(string key) => _properties.Remove(key.ToUpper());
+    public bool Remove(string key) => _properties.Remove(key);
 
-    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.Remove(KeyValuePair<string, BdfPropertyValue> item) => (_properties as ICollection<KeyValuePair<string, BdfPropertyValue>>).Remove(new KeyValuePair<string, BdfPropertyValue>(item.Key.ToUpper(), item.Value));
+    bool ICollection<KeyValuePair<string, BdfPropertyValue>>.Remove(KeyValuePair<string, BdfPropertyValue> item) => (_properties as ICollection<KeyValuePair<string, BdfPropertyValue>>).Remove(new KeyValuePair<string, BdfPropertyValue>(item.Key, item.Value));
 
     void IList<KeyValuePair<string, BdfPropertyValue>>.RemoveAt(int index) => (_properties as IList<KeyValuePair<string, BdfPropertyValue>>).RemoveAt(index);
 
