@@ -451,12 +451,12 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
     {
         if (!fontName.StartsWith('-'))
         {
-            throw new BdfXlfdException("Not starts with '-'.");
+            throw new BdfXlfdException("Must starts with '-'.");
         }
         var parts = fontName[1..].Split('-');
-        if (parts.Length != 14)
+        if (parts.Length != XlfdKeysOrder.Length)
         {
-            throw new BdfXlfdException("Must be 14 '-'.");
+            throw new BdfXlfdException($"Must contains {XlfdKeysOrder.Length} XLFD fields.");
         }
         for (var i = 0; i < XlfdKeysOrder.Length; i++)
         {
