@@ -391,24 +391,7 @@ internal static partial class BdfUtil
             }
 
             writer.Write('"');
-            if (stringValue.Contains('"'))
-            {
-                foreach (var c in stringValue)
-                {
-                    if (c is '"')
-                    {
-                        writer.Write("\"\"");
-                    }
-                    else
-                    {
-                        writer.Write(c);
-                    }
-                }
-            }
-            else
-            {
-                writer.Write(stringValue);
-            }
+            writer.Write(stringValue.Replace("\"", "\"\""));
             writer.Write('"');
         }
         else
