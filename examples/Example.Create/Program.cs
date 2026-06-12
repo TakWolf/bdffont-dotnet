@@ -1,4 +1,4 @@
-﻿using BdfSpec;
+using BdfSpec;
 
 var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))
