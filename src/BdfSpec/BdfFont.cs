@@ -101,7 +101,7 @@ public class BdfFont : ICopyable<BdfFont>, IEquatable<BdfFont>
 
     public void Save(string path)
     {
-        using var writer = new StreamWriter(path);
+        using var writer = File.CreateText(path);
         Dump(writer);
     }
 
