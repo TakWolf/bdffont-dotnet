@@ -11,6 +11,7 @@ public class BdfGlyphTests
         Assert.Equal((0, 0), glyph.ScalableWidth);
         Assert.Equal((0, 0), glyph.DeviceWidth);
         Assert.Equal((0, 0, 0, 0), glyph.BoundingBox);
+        Assert.Equal(0, glyph.Attributes);
         Assert.Equal([], glyph.Bitmap);
         Assert.Equal([], glyph.Comments);
 
@@ -51,6 +52,7 @@ public class BdfGlyphTests
             scalableWidth: (1, 2),
             deviceWidth: (3, 4),
             boundingBox: (5, 6, 7, 8),
+            attributes: 9,
             bitmap: [[1, 0, 0, 1]],
             comments: ["This is a comment."]);
         var glyph2 = glyph1.Copy();
@@ -70,6 +72,7 @@ public class BdfGlyphTests
             scalableWidth: (1, 2),
             deviceWidth: (3, 4),
             boundingBox: (5, 6, 7, 8),
+            attributes: 9,
             bitmap: [[1, 0, 0, 1]],
             comments: ["This is a comment."]);
         var glyph2 = glyph1.DeepCopy();
@@ -94,6 +97,7 @@ public class BdfGlyphTests
             scalableWidth: (1, 2),
             deviceWidth: (3, 4),
             boundingBox: (5, 6, 7, 8),
+            attributes: 9,
             bitmap: [[1, 0, 0, 1]],
             comments: ["This is a comment."]);
         var glyph2 = new BdfGlyph(
@@ -102,6 +106,7 @@ public class BdfGlyphTests
             scalableWidth: (1, 2),
             deviceWidth: (3, 4),
             boundingBox: (5, 6, 7, 8),
+            attributes: 9,
             bitmap: [[1, 0, 0, 1]],
             comments: ["This is a comment."]);
         Assert.Equal(glyph1, glyph2);

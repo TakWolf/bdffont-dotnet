@@ -152,6 +152,7 @@ public class BdfFontTests
         Assert.Equal(12, glyph.OffsetY);
         Assert.Equal((2, 12), glyph.Offset);
         Assert.Equal((4, 6, 2, 12), glyph.BoundingBox);
+        Assert.Equal(0b_0000000111000000, glyph.Attributes);
         Assert.Equal([
             [0, 1, 1, 1],
             [0, 1, 1, 1],

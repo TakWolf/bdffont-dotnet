@@ -23,6 +23,7 @@ internal static partial class BdfUtil
     private const string WordSWidth = "SWIDTH";
     private const string WordDWidth = "DWIDTH";
     private const string WordBbx = "BBX";
+    private const string WordAttributes = "ATTRIBUTES";
     private const string WordBitmap = "BITMAP";
 
     private const string CommentLinePrefix = $"{WordComment} ";
@@ -152,6 +153,7 @@ internal static partial class BdfUtil
         (int, int)? scalableWidth = null;
         (int, int)? deviceWidth = null;
         (int, int, int, int)? boundingBox = null;
+        ushort? attributes = null;
         List<string> comments = [];
 
         Span<int> intValues = stackalloc int[4];
@@ -174,6 +176,9 @@ internal static partial class BdfUtil
                 case WordBbx:
                     ConvertTailToInts(tail, intValues);
                     boundingBox = (intValues[0], intValues[1], intValues[2], intValues[3]);
+                    break;
+                case WordAttributes:
+                    attributes = ushort.Parse(tail, NumberStyles.HexNumber);
                     break;
                 case WordComment:
                     comments.Add(tail);
@@ -207,6 +212,7 @@ internal static partial class BdfUtil
                         scalableWidth.Value,
                         deviceWidth.Value,
                         boundingBox.Value,
+                        attributes ?? 0,
                         bitmap,
                         comments);
                 default:
@@ -435,6 +441,10 @@ internal static partial class BdfUtil
             DumpWordIntsLine(writer, WordSWidth, glyph.ScalableWidthX, glyph.ScalableWidthY);
             DumpWordIntsLine(writer, WordDWidth, glyph.DeviceWidthX, glyph.DeviceWidthY);
             DumpWordIntsLine(writer, WordBbx, glyph.Width, glyph.Height, glyph.OffsetX, glyph.OffsetY);
+            if (glyph.Attributes != 0)
+            {
+                DumpWordStringLine(writer, WordAttributes, glyph.Attributes.ToString("X4"));
+            }
             DumpWordStringLine(writer, WordBitmap);
 
             var bitmapWidth = (glyph.Width + 7) / 8 * 8;

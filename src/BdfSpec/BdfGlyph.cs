@@ -14,6 +14,7 @@ public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
     public int Height { get; set; }
     public int OffsetX { get; set; }
     public int OffsetY { get; set; }
+    public ushort Attributes { get; set; }
     public List<List<byte>> Bitmap { get; set; }
     public List<string> Comments { get; set; }
 
@@ -23,6 +24,7 @@ public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
         (int, int) scalableWidth = default,
         (int, int) deviceWidth = default,
         (int, int, int, int) boundingBox = default,
+        ushort attributes = 0,
         List<List<byte>>? bitmap = null,
         List<string>? comments = null)
     {
@@ -31,6 +33,7 @@ public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
         (ScalableWidthX, ScalableWidthY) = scalableWidth;
         (DeviceWidthX, DeviceWidthY) = deviceWidth;
         (Width, Height, OffsetX, OffsetY) = boundingBox;
+        Attributes = attributes;
         Bitmap = bitmap ?? [];
         Comments = comments ?? [];
     }
@@ -71,6 +74,7 @@ public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
         ScalableWidth,
         DeviceWidth,
         BoundingBox,
+        Attributes,
         Bitmap,
         Comments);
 
@@ -80,6 +84,7 @@ public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
         ScalableWidth,
         DeviceWidth,
         BoundingBox,
+        Attributes,
         CopyUtil.DeepCopyBitmap(Bitmap),
         [.. Comments]);
 
@@ -103,6 +108,7 @@ public class BdfGlyph : ICopyable<BdfGlyph>, IEquatable<BdfGlyph>
                Height == other.Height &&
                OffsetX == other.OffsetX &&
                OffsetY == other.OffsetY &&
+               Attributes == other.Attributes &&
                EqualUtil.BitmapEquals(Bitmap, other.Bitmap) &&
                EqualUtil.ListEquals(Comments, other.Comments);
     }
