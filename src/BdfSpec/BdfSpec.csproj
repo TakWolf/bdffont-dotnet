@@ -3,7 +3,7 @@
         <AssemblyName>BdfFont</AssemblyName>
 
         <Title>BdfFont</Title>
-        <Description>A library for manipulating Glyph Bitmap Distribution Format (BDF) Fonts</Description>
+        <Description>A library for handling Glyph Bitmap Distribution Format (BDF) Fonts</Description>
         <Authors>TakWolf</Authors>
         <Copyright>Copyright (c) 2025 TakWolf</Copyright>
 
