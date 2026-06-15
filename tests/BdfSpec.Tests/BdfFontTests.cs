@@ -66,7 +66,7 @@ public class BdfFontTests
         var font = new BdfFont();
 
         var e = Assert.Throws<BdfXlfdException>(() => font.UpdateByNameAsXlfd());
-        Assert.Equal("Must starts with '-'.", e.Message);
+        Assert.Equal("Must start with '-'.", e.Message);
 
         font.Name = "--------------";
         font.UpdateByNameAsXlfd();

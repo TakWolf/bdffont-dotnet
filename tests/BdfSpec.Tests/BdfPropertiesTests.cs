@@ -143,7 +143,7 @@ public class BdfPropertiesTests
         var properties = new BdfProperties();
 
         var e = Assert.Throws<BdfXlfdException>(() => properties.UpdateByXlfd("Bitstream-Charter-Medium-R-Normal--12-120-75-75-P-68-ISO8859-1"));
-        Assert.Equal("Must starts with '-'.", e.Message);
+        Assert.Equal("Must start with '-'.", e.Message);
     }
 
     [Fact]
@@ -152,7 +152,7 @@ public class BdfPropertiesTests
         var properties = new BdfProperties();
 
         var e = Assert.Throws<BdfXlfdException>(() => properties.UpdateByXlfd("-Bitstream-Charter-Medium-R-Normal--12-120-75-75-P-68-ISO8859-1-"));
-        Assert.Equal("Must contains 14 XLFD fields.", e.Message);
+        Assert.Equal("Must contain 14 XLFD fields.", e.Message);
     }
 
     [Fact]
@@ -227,7 +227,7 @@ public class BdfPropertiesTests
         var properties = new BdfProperties();
 
         var e = Assert.Throws<BdfKeyException>(() => properties["abc-def"] = "abcdef");
-        Assert.Equal("Key contains illegal characters.", e.Message);
+        Assert.Equal("Key contain illegal characters.", e.Message);
     }
 
     [Fact]

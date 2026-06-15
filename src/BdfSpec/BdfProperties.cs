@@ -107,7 +107,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
     {
         if (!RegexPropKey().IsMatch(key))
         {
-            throw new BdfKeyException("Key contains illegal characters.");
+            throw new BdfKeyException("Key contain illegal characters.");
         }
     }
 
@@ -125,10 +125,9 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
 
     private static void CheckXlfdStringValue(string key, string value)
     {
-        var match = RegexXlfdValue().Match(value);
-        if (match.Success)
+        if (RegexXlfdValue().IsMatch(value))
         {
-            throw new BdfValueException($"Value of '{key}' contains illegal characters '{match.Value}'.");
+            throw new BdfValueException($"Value of '{key}' contain illegal characters.");
         }
     }
 
@@ -451,12 +450,12 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
     {
         if (!fontName.StartsWith('-'))
         {
-            throw new BdfXlfdException("Must starts with '-'.");
+            throw new BdfXlfdException("Must start with '-'.");
         }
         var parts = fontName[1..].Split('-');
         if (parts.Length != XlfdKeysOrder.Length)
         {
-            throw new BdfXlfdException($"Must contains {XlfdKeysOrder.Length} XLFD fields.");
+            throw new BdfXlfdException($"Must contain {XlfdKeysOrder.Length} XLFD fields.");
         }
         for (var i = 0; i < XlfdKeysOrder.Length; i++)
         {

@@ -311,7 +311,7 @@ internal static partial class BdfUtil
                 case WordStartFont:
                     if (tail is not SpecVersion)
                     {
-                        throw new BdfParseException($"Spec version not support: {tail}");
+                        throw new BdfParseException($"Unsupported BDF version: '{tail}'");
                     }
                     return ParseFontSegment(lines);
                 default:

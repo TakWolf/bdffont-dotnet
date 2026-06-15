@@ -16,7 +16,7 @@ public class DamagedTests
     public void TestUnsupportedVersion()
     {
         var e = Assert.Throws<BdfParseException>(() => BdfFont.Load(Path.Combine("assets", "damaged", "unsupported_version.bdf")));
-        Assert.Equal("Spec version not support: 2.2", e.Message);
+        Assert.Equal("Unsupported BDF version: '2.2'", e.Message);
     }
 
     [Fact]
