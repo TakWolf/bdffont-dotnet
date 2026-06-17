@@ -452,11 +452,13 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         {
             throw new BdfXlfdException("Must start with '-'.");
         }
+
         var parts = fontName[1..].Split('-');
         if (parts.Length != XlfdKeysOrder.Length)
         {
             throw new BdfXlfdException($"Must contain {XlfdKeysOrder.Length} XLFD fields.");
         }
+
         for (var i = 0; i < XlfdKeysOrder.Length; i++)
         {
             var key = XlfdKeysOrder[i];

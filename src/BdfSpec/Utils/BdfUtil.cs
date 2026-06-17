@@ -89,6 +89,7 @@ internal static partial class BdfUtil
     private static BdfProperties ParsePropertiesSegment(IEnumerator<(string, string)> lines, int count)
     {
         var properties = new BdfProperties(count);
+
         while (lines.MoveNext())
         {
             var (word, tail) = lines.Current;
@@ -122,6 +123,7 @@ internal static partial class BdfUtil
     private static List<List<byte>> ParseBitmapSegment(IEnumerator<(string, string)> lines, int glyphWidth, int glyphHeight)
     {
         var bitmap = new List<List<byte>>(glyphHeight);
+
         while (lines.MoveNext())
         {
             var (word, _) = lines.Current;
