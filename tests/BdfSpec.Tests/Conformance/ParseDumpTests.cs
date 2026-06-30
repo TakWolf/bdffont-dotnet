@@ -7,7 +7,7 @@ public class ParseDumpTests
     [InlineData("misaki", "misaki_gothic.bdf")]
     [InlineData("misaki", "misaki_gothic_2nd.bdf")]
     [InlineData("misaki", "misaki_mincho.bdf")]
-    [InlineData("unifont", "unifont-17.0.04.bdf")]
+    [InlineData("unifont", "unifont-17.0.05.bdf")]
     public void TestParseDump(string fontDir, string fontFileName)
     {
         var data = File.ReadAllText(Path.Combine("assets", fontDir, fontFileName));
