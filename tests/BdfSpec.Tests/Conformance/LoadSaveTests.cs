@@ -9,7 +9,7 @@ public class LoadSaveTests
     [InlineData("misaki", "misaki_gothic.bdf")]
     [InlineData("misaki", "misaki_gothic_2nd.bdf")]
     [InlineData("misaki", "misaki_mincho.bdf")]
-    [InlineData("unifont", "unifont-17.0.04.bdf")]
+    [InlineData("unifont", "unifont-17.0.05.bdf")]
     public void TestLoadSave(string fontDir, string fontFileName)
     {
         var loadPath = Path.Combine("assets", fontDir, fontFileName);
