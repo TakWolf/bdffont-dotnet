@@ -14,7 +14,7 @@ var font = new BdfFont(
 
 font.Glyphs.Add(new BdfGlyph(
     name: ".notdef",
-    encoding: -1,
+    encoding: 0xFFFE,
     scalableWidth: (500, 0),
     deviceWidth: (8, 0),
     boundingBox: (8, 16, 0, -2),
@@ -38,8 +38,8 @@ font.Glyphs.Add(new BdfGlyph(
     ]));
 
 font.Glyphs.Add(new BdfGlyph(
-    name: "CAP_LETTER_A",
-    encoding: 65,
+    name: "LATIN_CAPITAL_LETTER_A",
+    encoding: 0x0041,
     scalableWidth: (500, 0),
     deviceWidth: (8, 0),
     boundingBox: (8, 16, 0, -2),
@@ -78,7 +78,7 @@ font.Properties.CharsetRegistry = "ISO10646";
 font.Properties.CharsetEncoding = "1";
 font.GenerateNameAsXlfd();
 
-font.Properties.DefaultChar = -1;
+font.Properties.DefaultChar = 0xFFFE;
 font.Properties.FontAscent = 14;
 font.Properties.FontDescent = 2;
 font.Properties.XHeight = 7;
