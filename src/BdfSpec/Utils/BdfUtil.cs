@@ -231,7 +231,7 @@ internal static partial class BdfUtil
         (int, int)? resolution = null;
         (int, int, int, int)? boundingBox = null;
         BdfProperties? properties = null;
-        int? glyphsCount = null;
+        int? glyphCount = null;
         List<BdfGlyph> glyphs = [];
         List<string> comments = [];
 
@@ -257,8 +257,8 @@ internal static partial class BdfUtil
                     properties = ParsePropertiesSegment(lines, int.Parse(tail));
                     break;
                 case WordChars:
-                    glyphsCount = int.Parse(tail);
-                    glyphs.EnsureCapacity(glyphsCount.Value);
+                    glyphCount = int.Parse(tail);
+                    glyphs.EnsureCapacity(glyphCount.Value);
                     break;
                 case WordStartChar:
                     glyphs.Add(ParseGlyphSegment(lines, tail));
@@ -279,13 +279,13 @@ internal static partial class BdfUtil
                     {
                         throw BdfMissingWordException.Create(WordFontBoundingBox);
                     }
-                    if (glyphsCount is null)
+                    if (glyphCount is null)
                     {
                         throw BdfMissingWordException.Create((WordChars));
                     }
-                    if (glyphs.Count != glyphsCount)
+                    if (glyphs.Count != glyphCount)
                     {
-                        throw BdfCountException.Create(WordChars, glyphsCount.Value, glyphs.Count);
+                        throw BdfCountException.Create(WordChars, glyphCount.Value, glyphs.Count);
                     }
                     return new BdfFont(
                         name,

@@ -123,17 +123,17 @@ public class DamagedTests
     }
 
     [Fact]
-    public void TestIncorrectPropertiesCount()
+    public void TestIncorrectPropertyCount()
     {
-        var e = Assert.Throws<BdfCountException>(() => BdfFont.Load(Path.Combine("assets", "damaged", "incorrect_properties_count.bdf")));
+        var e = Assert.Throws<BdfCountException>(() => BdfFont.Load(Path.Combine("assets", "damaged", "incorrect_property_count.bdf")));
         Assert.Equal("STARTPROPERTIES", e.Word);
         Assert.Equal("The count of STARTPROPERTIES is incorrect: 1000 -> 19", e.Message);
     }
 
     [Fact]
-    public void TestIncorrectCharsCount()
+    public void TestIncorrectCharCount()
     {
-        var e = Assert.Throws<BdfCountException>(() => BdfFont.Load(Path.Combine("assets", "damaged", "incorrect_chars_count.bdf")));
+        var e = Assert.Throws<BdfCountException>(() => BdfFont.Load(Path.Combine("assets", "damaged", "incorrect_char_count.bdf")));
         Assert.Equal("CHARS", e.Word);
         Assert.Equal("The count of CHARS is incorrect: 1000 -> 2", e.Message);
     }

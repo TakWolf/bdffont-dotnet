@@ -80,7 +80,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         KeyCharsetEncoding
     };
 
-    private static readonly string[] XlfdKeysOrder = [
+    private static readonly string[] XlfdKeyOrder = [
         KeyFoundry,
         KeyFamilyName,
         KeyWeightName,
@@ -433,7 +433,7 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
     public string ToXlfd()
     {
         var xlfd = new StringBuilder();
-        foreach (var key in XlfdKeysOrder)
+        foreach (var key in XlfdKeyOrder)
         {
             var value = GetValue(key)?.ToString() ?? "";
             if (XlfdStringValueKeys.Contains(key))
@@ -454,14 +454,14 @@ public partial class BdfProperties : IDictionary<string, BdfPropertyValue>, ILis
         }
 
         var parts = fontName[1..].Split('-');
-        if (parts.Length != XlfdKeysOrder.Length)
+        if (parts.Length != XlfdKeyOrder.Length)
         {
-            throw new BdfXlfdException($"Must contain {XlfdKeysOrder.Length} XLFD fields.");
+            throw new BdfXlfdException($"Must contain {XlfdKeyOrder.Length} XLFD fields.");
         }
 
-        for (var i = 0; i < XlfdKeysOrder.Length; i++)
+        for (var i = 0; i < XlfdKeyOrder.Length; i++)
         {
-            var key = XlfdKeysOrder[i];
+            var key = XlfdKeyOrder[i];
             var part = parts[i];
             BdfPropertyValue? value;
             if (part is "")
