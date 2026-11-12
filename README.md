@@ -80,7 +80,7 @@ font.Glyphs.Add(new BdfGlyph(
         [0, 0, 0, 0, 0, 0, 0, 0]
     ]));
 
-font.Properties.Foundry = "Pixel Font Studio";
+font.Properties.Foundry = "TakWolf";
 font.Properties.FamilyName = "My Font";
 font.Properties.WeightName = "Medium";
 font.Properties.Slant = "R";
